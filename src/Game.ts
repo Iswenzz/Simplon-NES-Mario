@@ -3,7 +3,7 @@ import Level from "./world/Level";
 import Vector from "./math/Vector";
 import Canvas from "./sys/Canvas";
 import Controls from "./sys/Controls";
-import lvl1 from "./assets/level/1-1.jpg";
+import lvl1 from "./assets/1-1.jpg";
 
 export default class Game
 {
@@ -24,7 +24,7 @@ export default class Game
 		this.controls = new Controls();
 
 		this.level = new Level(lvl1);
-		this.mario = new Mario(new Vector(130, 190));
+		this.mario = new Mario(new Vector(200, 190));
 
 		window.requestAnimationFrame(this.mainLoop.bind(this));
 	}

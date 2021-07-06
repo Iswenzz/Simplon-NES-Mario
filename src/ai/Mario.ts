@@ -1,5 +1,5 @@
 import Canvas from "../sys/Canvas";
-import mario from "../assets/ai/mario.png";
+import mario from "../assets/mario.png";
 import IRenderable from "../IRenderable";
 import Game from "../Game";
 import Controls from "../sys/Controls";
