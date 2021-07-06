@@ -1,29 +1,46 @@
+import Vector from "../math/Vector";
 import Camera from "./Camera";
-import Game from "./Game";
 
 export default class Canvas
 {
 	public target: HTMLCanvasElement;
 	public ctx: CanvasRenderingContext2D;
 	public camera: Camera;
+	public resolutionZoom: Vector;
 	
 	public constructor(canvasId: string)
 	{
 		this.target = document.getElementById(canvasId) as HTMLCanvasElement;
 		this.target.height = window.innerHeight;
 		this.target.width = window.innerWidth;
+		this.resolutionZoom = new Vector(this.target.width / 1024, this.target.height / 576);
+		this.resolutionZoom.multiply(new Vector(2.15, 2.15));
+	}
 
+	public initialize()
+	{
 		this.ctx = this.target.getContext("2d");
+		this.camera = new Camera();
 	}
 
-	public renderRight(bitmap: HTMLImageElement, position: Point, size: Size)
+	public render(bitmap: HTMLImageElement, position: Vector, size: Vector)
 	{
-		Game.getInstance().camera.renderRight(bitmap, position, size);
+		const nSize = Vector.multiply(size, this.resolutionZoom);
+		const nPosition = Vector.multiply(position, this.resolutionZoom);
+
+		this.ctx.drawImage(bitmap,
+			nPosition.x, nPosition.y,
+			nSize.x, nSize.y);
 	}
 
-	public renderLeft(bitmap: HTMLImageElement, position: Point, size: Size)
+	public renderRight(bitmap: HTMLImageElement, position: Vector, size: Vector)
 	{
-		Game.getInstance().camera.renderLeft(bitmap, position, size);
+		this.camera.renderRight(bitmap, position, size);
+	}
+
+	public renderLeft(bitmap: HTMLImageElement, position: Vector, size: Vector)
+	{
+		this.camera.renderLeft(bitmap, position, size);
 	}
 
 	public clear()

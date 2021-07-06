@@ -1,17 +1,18 @@
 import Canvas from "../sys/Canvas";
 import IRenderable from "../IRenderable";
-import Game from "../sys/Game";
+import Game from "../Game";
+import Vector from "../math/Vector";
 
 export default class Level implements IRenderable
 {
 	public canvas: Canvas;
-	public zoom: Size = { width: 2.4, height: 1 };
 	public bitmap: HTMLImageElement;
 
-	public originalPosition: Point;
-	public position: Point;
+	public originalPosition: Vector;
+	public position: Vector;
+	public size: Vector;
 
-	public constructor(bitmapPath: string, topLeftPoint?: Point)
+	public constructor(bitmapPath: string, topLeftVector?: Vector)
 	{
 		const { canvas } = Game.getInstance();
 
@@ -19,15 +20,13 @@ export default class Level implements IRenderable
 		this.bitmap = new Image();
 		this.bitmap.src = bitmapPath;
 
-		this.originalPosition = topLeftPoint || { x: 0, y: 0 };
-		this.position = { ...this.originalPosition };
+		this.originalPosition = Vector.create(topLeftVector);
+		this.position = Vector.create(this.originalPosition);
+		this.size = new Vector(this.bitmap.width, this.bitmap.height);
 	}
 
 	public frame()
 	{
-		this.canvas.ctx.drawImage(this.bitmap, 
-			this.position.x, this.position.y, 
-			this.bitmap.width * this.zoom.width, 
-			this.canvas.target.height * this.zoom.height);
+		this.canvas.render(this.bitmap, this.position, this.size);
 	}
 }

@@ -1,4 +1,4 @@
 export default interface IRenderable
 {
-	frame();
+	frame(): void;
 }

@@ -1,6 +1,7 @@
 import Matrix3x2 from "../math/Matrix3x2";
 import Canvas from "./Canvas";
-import Game from "./Game";
+import Game from "../Game";
+import Vector from "../math/Vector";
 
 export default class Camera
 {
@@ -15,45 +16,50 @@ export default class Camera
 		this.canvas = canvas;
 	}
 
-	public renderLeft(bitmap: HTMLImageElement, position: Point, size: Size)
+	public renderLeft(bitmap: HTMLImageElement, position: Vector, size: Vector)
 	{
-		const mat = new Matrix3x2(
+		const matrix = new Matrix3x2(
 			this.matrix.m11, this.matrix.m12, 
 			this.matrix.m21, this.matrix.m22,
 			this.matrix.dx, this.matrix.dy);
+		const nSize = Vector.multiply(size, this.canvas.resolutionZoom);
+		matrix.setTranslation(
+			matrix.dx + nSize.x / 2, 
+			matrix.dy + nSize.y / 2);
+		matrix.setScale(-matrix.m11, matrix.m22);
 
-		mat.setTranslation(
-			mat.dx + size.width / 2, 
-			mat.dy + size.height / 2);
-		mat.setScale(-mat.m11, mat.m22);
 		this.canvas.ctx.setTransform(
-			mat.m11, mat.m12, 
-			mat.m21, mat.m22, 
-			mat.dx, mat.dy);
-		this.canvas.ctx.drawImage(bitmap, 
-			-position.x, position.y - size.height / 2, 
-			size.width, size.height);
+			matrix.m11, matrix.m12, 
+			matrix.m21, matrix.m22, 
+			matrix.dx, matrix.dy);
+
+		this.canvas.render(bitmap, 
+			new Vector(-position.x, position.y - size.y / 2), 
+			size);
+
 		this.canvas.ctx.setTransform(
 			this.matrix.m11, this.matrix.m12, 
 			this.matrix.m21, this.matrix.m22,
 			this.matrix.dx, this.matrix.dy);
 	}
 
-	public renderRight(bitmap: HTMLImageElement, position: Point, size: Size)
+	public renderRight(bitmap: HTMLImageElement, position: Vector, size: Vector)
 	{
-		const mat = new Matrix3x2(
+		const matrix = new Matrix3x2(
 			this.matrix.m11, this.matrix.m12, 
 			this.matrix.m21, this.matrix.m22,
 			this.matrix.dx, this.matrix.dy);
+		matrix.setScale(matrix.m11, matrix.m22); 
 
-		mat.setScale(mat.m11, mat.m22); 
 		this.canvas.ctx.setTransform(
-			mat.m11, mat.m12, 
-			mat.m21, mat.m22, 
-			mat.dx, mat.dy); 
-		this.canvas.ctx.drawImage(bitmap, 
-			position.x - size.width / 2, position.y, 
-			size.width, size.height);
+			matrix.m11, matrix.m12, 
+			matrix.m21, matrix.m22, 
+			matrix.dx, matrix.dy); 
+
+		this.canvas.render(bitmap,
+			new Vector(position.x - size.x / 2, position.y),
+			size);
+
 		this.canvas.ctx.setTransform(
 			this.matrix.m11, this.matrix.m12, 
 			this.matrix.m21, this.matrix.m22,

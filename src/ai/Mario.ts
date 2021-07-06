@@ -1,29 +1,30 @@
 import Canvas from "../sys/Canvas";
 import mario from "../assets/ai/mario.png";
 import IRenderable from "../IRenderable";
-import Game from "../sys/Game";
+import Game from "../Game";
 import Controls from "../sys/Controls";
 import Direction from "../utils/Direction";
+import Vector from "../math/Vector";
 
 export default class Mario implements IRenderable
 {
 	public controls: Controls;
 	public bitmap: HTMLImageElement;
 	public canvas: Canvas;
-	public size: Size;
+	public size: Vector;
 
-	public position: Point;
-	public spawnPoint: Point;
+	public position: Vector;
+	public spawnVector: Vector;
 
 	public direction: Direction;
-	public originalVelocity: Point;
-	public velocity: Point;
+	public originalVelocity: Vector;
+	public velocity: Vector;
 	public gravity: number;
 	public speed: number;
 
 	public isJumping = false;
 
-	public constructor(spawnPoint?: Point)
+	public constructor(spawnVector?: Vector)
 	{
 		const { controls, canvas } = Game.getInstance();
 
@@ -31,32 +32,32 @@ export default class Mario implements IRenderable
 		this.controls = controls;
 		this.bitmap = new Image();
 		this.bitmap.src = mario;
-		this.size = { width: 32, height: 32 };
+		this.size = new Vector(18, 18);
 
-		this.spawnPoint = spawnPoint;
-		this.position = { ...this.spawnPoint } || { x: 0, y: 0 };
+		this.spawnVector = spawnVector;
+		this.position = Vector.create(this.spawnVector);
 
 		this.direction = Direction.RIGHT;
-		this.speed = 4;
-		this.originalVelocity = { x: 0, y: -8 };
-		this.velocity = { ...this.originalVelocity };
-		this.gravity = 0.2;
+		this.speed = 1;
+		this.originalVelocity = new Vector(0, -2.7);
+		this.velocity = Vector.create(this.originalVelocity);
+		this.gravity = 0.05;
 	}
 
 	public jump()
 	{
-		if (this.isJumping && this.position.y >= 465)
+		if (this.isJumping && this.position.y >= 190)
 		{
-			this.position.y = 465;
-			this.velocity = { ...this.originalVelocity };
+			this.position.y = 190;
+			this.velocity = Vector.create(this.originalVelocity);
 			this.isJumping = false;
 			return;
 		}
 
 		this.isJumping = true;
 		this.velocity.y += this.gravity;
-		this.position.x += Math.round(this.velocity.x);
-		this.position.y += Math.round(this.velocity.y);
+		this.position.x += this.velocity.x;
+		this.position.y += this.velocity.y;
 	}
 
 	public frame()

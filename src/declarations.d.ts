@@ -3,12 +3,12 @@ declare module "*";
 type Nullable<T> = T | null;
 type Optional<T> = T | undefined;
 
-type Point = {
+type Vector = {
 	x: number,
 	y: number
 };
 
-type Size = {
+type Vector = {
 	width: number,
 	height: number
 };

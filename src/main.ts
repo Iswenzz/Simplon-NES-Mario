@@ -1,4 +1,4 @@
 import "./style.css";
-import Game from "./sys/Game";
+import Game from "./Game";
 
 Game.getInstance().initialize();
