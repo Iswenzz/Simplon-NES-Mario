@@ -8,9 +8,10 @@ import Vector from "../math/Vector";
 
 export default class Mario implements IRenderable
 {
-	public controls: Controls;
+	private controls: Controls;
+	private canvas: Canvas;
+	
 	public bitmap: HTMLImageElement;
-	public canvas: Canvas;
 	public size: Vector;
 
 	public position: Vector;
@@ -38,7 +39,7 @@ export default class Mario implements IRenderable
 		this.position = Vector.create(this.spawnVector);
 
 		this.direction = Direction.RIGHT;
-		this.speed = 1;
+		this.speed = 0.7;
 		this.originalVelocity = new Vector(0, -2.7);
 		this.velocity = Vector.create(this.originalVelocity);
 		this.gravity = 0.05;
@@ -67,14 +68,19 @@ export default class Mario implements IRenderable
 		{
 			this.direction = Direction.RIGHT;
 			this.position.x += this.speed;
+			this.canvas.camera.translateX(-this.speed);
 		}
 		if (this.controls.keysDown["ArrowLeft"])
 		{
 			this.direction = Direction.LEFT;
 			this.position.x -= this.speed;
+			this.canvas.camera.translateX(this.speed);
 		}
 		if (this.isJumping || this.controls.keysDown["ArrowUp"])
 			this.jump();
+
+		// Sprint
+		this.speed = this.controls.keysDown["Shift"] ? 1.1 : 0.7;
 
 		// Render image
 		if (this.direction === Direction.LEFT)

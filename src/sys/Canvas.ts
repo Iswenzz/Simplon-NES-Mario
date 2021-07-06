@@ -25,12 +25,9 @@ export default class Canvas
 
 	public render(bitmap: HTMLImageElement, position: Vector, size: Vector)
 	{
-		const nSize = Vector.multiply(size, this.resolutionZoom);
-		const nPosition = Vector.multiply(position, this.resolutionZoom);
-
 		this.ctx.drawImage(bitmap,
-			nPosition.x, nPosition.y,
-			nSize.x, nSize.y);
+			position.x, position.y,
+			size.x, size.y);
 	}
 
 	public renderRight(bitmap: HTMLImageElement, position: Vector, size: Vector)

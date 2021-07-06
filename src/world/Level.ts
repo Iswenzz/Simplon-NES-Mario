@@ -5,9 +5,9 @@ import Vector from "../math/Vector";
 
 export default class Level implements IRenderable
 {
-	public canvas: Canvas;
-	public bitmap: HTMLImageElement;
+	private canvas: Canvas;
 
+	public bitmap: HTMLImageElement;
 	public originalPosition: Vector;
 	public position: Vector;
 	public size: Vector;

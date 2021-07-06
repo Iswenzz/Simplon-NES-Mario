@@ -1,3 +1,5 @@
+import Vector from "./Vector";
+
 export default class Matrix3x2
 {
 	public m11: number;
@@ -7,7 +9,7 @@ export default class Matrix3x2
 	public dx: number;
 	public dy: number;
 
-	public static identity: Matrix3x2 = new Matrix3x2(1, 0, 0, 1, 0, 0);
+	public static identity: Matrix3x2 = new Matrix3x2(2.15, 0, 0, 2.15, 0, 0);
 
 	public constructor(m11: number, m12: number, 
 		m21: number, m22: number, 
@@ -21,16 +23,24 @@ export default class Matrix3x2
 		this.dy = dy;
 	}
 
-	public setScale(m11: number, m22: number) 
-	{ 
-		this.m11 = m11; 
-		this.m22 = m22;
+	public static create(matrix: Matrix3x2)
+	{
+		return new Matrix3x2(
+			matrix.m11, matrix.m12,
+			matrix.m21, matrix.m22,
+			matrix.dx, matrix.dy);
 	}
 
-	public setTranslation(dx: number, dy: number) 
+	public setScale(vec: Vector) 
 	{ 
-		this.dx = dx;
-		this.dy = dy;
+		this.m11 = vec.x; 
+		this.m22 = vec.y;
+	}
+
+	public setTranslation(vec: Vector) 
+	{ 
+		this.dx = vec.x;
+		this.dy = vec.y;
 	}
 
 	public setTransform(m11: number, m12: number, 
@@ -47,12 +57,12 @@ export default class Matrix3x2
 
 	public getScale() 
 	{ 
-		return { x: this.m11, y: this.m22 }; 
+		return new Vector(this.m11, this.m22);
 	}
 
 	public getTranslation() 
 	{ 
-		return { x: this.dx, y: this.dy };
+		return new Vector(this.dx, this.dy);
 	}
 
 	public getTransform() 

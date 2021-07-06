@@ -5,28 +5,34 @@ import Vector from "../math/Vector";
 
 export default class Camera
 {
+	private canvas: Canvas;
+	
 	public matrix: Matrix3x2;
-	public canvas: Canvas;
 
 	public constructor()
 	{
 		const { canvas } = Game.getInstance();
 
-		this.matrix = Matrix3x2.identity;
 		this.canvas = canvas;
+		this.matrix = new Matrix3x2(this.canvas.resolutionZoom.x, 0, 0, 
+			this.canvas.resolutionZoom.y, 0, 0);
+	}
+
+	public translateX(value: number)
+	{
+		const matrixPosition = this.matrix.getTranslation();
+		matrixPosition.add(new Vector(value * this.canvas.resolutionZoom.x, 0));
+		this.matrix.setTranslation(matrixPosition);
 	}
 
 	public renderLeft(bitmap: HTMLImageElement, position: Vector, size: Vector)
 	{
-		const matrix = new Matrix3x2(
-			this.matrix.m11, this.matrix.m12, 
-			this.matrix.m21, this.matrix.m22,
-			this.matrix.dx, this.matrix.dy);
+		const matrix = Matrix3x2.create(this.matrix);
 		const nSize = Vector.multiply(size, this.canvas.resolutionZoom);
-		matrix.setTranslation(
+		matrix.setTranslation(new Vector(
 			matrix.dx + nSize.x / 2, 
-			matrix.dy + nSize.y / 2);
-		matrix.setScale(-matrix.m11, matrix.m22);
+			matrix.dy + nSize.y / 2));
+		matrix.setScale(new Vector(-matrix.m11, matrix.m22));
 
 		this.canvas.ctx.setTransform(
 			matrix.m11, matrix.m12, 
@@ -45,11 +51,8 @@ export default class Camera
 
 	public renderRight(bitmap: HTMLImageElement, position: Vector, size: Vector)
 	{
-		const matrix = new Matrix3x2(
-			this.matrix.m11, this.matrix.m12, 
-			this.matrix.m21, this.matrix.m22,
-			this.matrix.dx, this.matrix.dy);
-		matrix.setScale(matrix.m11, matrix.m22); 
+		const matrix = Matrix3x2.create(this.matrix);
+		matrix.setScale(new Vector(matrix.m11, matrix.m22)); 
 
 		this.canvas.ctx.setTransform(
 			matrix.m11, matrix.m12, 
