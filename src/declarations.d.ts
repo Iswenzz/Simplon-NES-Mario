@@ -1,4 +1,4 @@
-declare module "*.jpg";
+declare module "*";
 
 type Nullable<T> = T | null;
 type Optional<T> = T | undefined;
