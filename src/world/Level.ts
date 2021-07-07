@@ -32,12 +32,13 @@ export default class Level implements IRenderable
 	public intersect(rectangle: Rectangle, ...selectedCorners: (keyof Corners)[]): boolean
 	{
 		const corners = {
-			topLeft: this.colmap.colorAt(rectangle.x, rectangle.y),
-			bottomRight: this.colmap.colorAt(rectangle.x + rectangle.width, rectangle.y + rectangle.height),
-			topRight: this.colmap.colorAt(rectangle.x + rectangle.width, rectangle.y),
-			bottomLeft: this.colmap.colorAt(rectangle.x, rectangle.y + rectangle.height),
+			topLeft: this.colmap.colorAt(rectangle.getTopLeft()),
+			bottomRight: this.colmap.colorAt(rectangle.getBottomRight()),
+			topRight: this.colmap.colorAt(rectangle.getTopRight()),
+			bottomLeft: this.colmap.colorAt(rectangle.getBottomLeft()),
 		};
-		console.log(corners);
+		// selectedCorners.forEach(k => console.log(k, corners[k]));
+
 		return selectedCorners.some(k => corners[k].r === 0);
 	}
 

@@ -48,5 +48,6 @@ export default class Mario extends GeneralAi implements IRenderable
 			else
 				this.game.canvas.renderRight(this.atlas.currentAtlas.bitmap, this.position, this.size);
 		}
+		this.rectangle.setRect(this.position.x, this.position.y, this.size.x, this.size.y);
 	}
 }

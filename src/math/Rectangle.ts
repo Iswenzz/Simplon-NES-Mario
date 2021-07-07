@@ -29,6 +29,26 @@ export default class Rectangle
 		this.height = height;
 	}
 
+	public getTopLeft()
+	{
+		return new Vector(this.x, this.y);
+	}
+
+	public getTopRight()
+	{
+		return new Vector(this.x + this.width, this.y);
+	}
+
+	public getBottomLeft()
+	{
+		return new Vector(this.x, this.y + this.height);
+	}
+
+	public getBottomRight()
+	{
+		return new Vector(this.x + this.width, this.y + this.height);
+	}
+
 	public static copy(rect: Rectangle)
 	{
 		return new Rectangle(rect.x, rect.y, rect.width, rect.height);

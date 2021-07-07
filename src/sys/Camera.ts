@@ -36,10 +36,6 @@ export default class Camera
 	public renderLeft(bitmap: HTMLImageElement, position: Vector, size: Vector)
 	{
 		const matrix = Matrix3x2.create(this.matrix);
-		const nSize = Vector.multiply(size, this.canvas.resolutionZoom);
-		matrix.setTranslation(new Vector(
-			matrix.dx + nSize.x / 2, 
-			matrix.dy + nSize.y / 2));
 		matrix.setScale(new Vector(-matrix.m11, matrix.m22));
 
 		this.canvas.ctx.setTransform(
@@ -48,7 +44,7 @@ export default class Camera
 			matrix.dx, matrix.dy);
 
 		this.canvas.render(bitmap, 
-			new Vector(-position.x, position.y - size.y / 2), 
+			new Vector(-position.x - size.x, position.y), 
 			size);
 
 		this.canvas.ctx.setTransform(
@@ -68,7 +64,7 @@ export default class Camera
 			matrix.dx, matrix.dy); 
 
 		this.canvas.render(bitmap,
-			new Vector(position.x - size.x / 2, position.y),
+			new Vector(position.x, position.y),
 			size);
 
 		this.canvas.ctx.setTransform(

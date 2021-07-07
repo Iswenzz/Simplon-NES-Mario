@@ -1,4 +1,13 @@
+import Game from "../Game";
+import Vector from "../math/Vector";
 import Texture from "./Texture";
+
+export type Color = {
+	r: number,
+	g: number,
+	b: number,
+	a: number
+};
 
 export default class ImageBuffer
 {
@@ -9,12 +18,15 @@ export default class ImageBuffer
 	{
 		this.bitmap = texture.bitmap;
 		this.buffer = this.getImageBuffer(texture);
-		console.log(this.buffer);
 	}
 
-	public colorAt(x: number, y: number)
+	public colorAt(point: Vector): Color
 	{
-		const pixelOffset = y * this.buffer.width + x;
+		const pixelOffset = Math.round(point.y * 4 * point.x);
+		
+		// console.log(point, pixelOffset);
+		Game.getInstance().canvas.ctx.fillStyle = "blue";
+		Game.getInstance().canvas.ctx.fillRect(point.x, point.y, 1, 1);
 		return {
 			r: this.buffer.data[pixelOffset],
 			g: this.buffer.data[pixelOffset + 1],

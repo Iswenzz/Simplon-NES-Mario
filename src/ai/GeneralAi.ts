@@ -33,13 +33,10 @@ export default class GeneralAi extends AbstractAi implements IRenderable
 	public jump()
 	{
 		const predictedMove = Rectangle.copy(this.rectangle);
-		predictedMove.y += this.velocity.y + this.gravity;
-		const test = this.game.level.intersect(predictedMove, "bottomLeft", "bottomRight");
-		console.log(test);
+		predictedMove.y += this.velocity.y + (this.gravity * this.game.deltaTime);
 
-		if (this.isJumping && this.position.y >= 190)
+		if (this.isJumping && this.game.level.intersect(predictedMove, "bottomLeft", "bottomRight"))
 		{
-			this.position.y = 190;
 			this.velocity = Vector.copy(this.originalVelocity);
 			this.isJumping = false;
 			this.atlas.setSprite("idle");
@@ -59,17 +56,10 @@ export default class GeneralAi extends AbstractAi implements IRenderable
 		this.sprintAnimation.frame();
 	}
 
-	public kill()
-	{
-
-	}
+	public kill() { }
 
 	public moveLeft()
-	{
-		this.rectangle.setRect(
-			this.position.x, this.position.y, 
-			this.size.x, this.size.y);
-			
+	{	
 		const value = this.speed * this.game.deltaTime;
 		this.direction = Direction.LEFT;
 		const predictedMove = Rectangle.copy(this.rectangle);
@@ -85,10 +75,6 @@ export default class GeneralAi extends AbstractAi implements IRenderable
 
 	public moveRight()
 	{
-		this.rectangle.setRect(
-			this.position.x - this.rectangle.width, this.position.y, 
-			this.size.x, this.size.y);
-			
 		const value = this.speed * this.game.deltaTime;
 		this.direction = Direction.RIGHT;
 		const predictedMove = Rectangle.copy(this.rectangle);
@@ -127,5 +113,6 @@ export default class GeneralAi extends AbstractAi implements IRenderable
 			else
 				this.game.canvas.renderRight(this.atlas.currentAtlas.bitmap, this.position, this.size);
 		}
+		this.rectangle.setRect(this.position.x, this.position.y, this.size.x, this.size.y);
 	}
 }
