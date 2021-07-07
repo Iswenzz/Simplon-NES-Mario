@@ -1,0 +1,38 @@
+{
+    "idle": {
+        "x": 520,
+        "y": 190,
+        "width": 64,
+        "height": 64
+    } ,
+    "sprint_a": {
+        "x": 240,
+        "y": 190,
+        "width": 64,
+        "height": 64
+    },
+    "sprint_b": {
+        "x": 140,
+        "y": 190,
+        "width": 64,
+        "height": 64
+    } ,
+    "sprint_c": {
+        "x": 40,
+        "y": 190,
+        "width": 64,
+        "height": 64
+    },
+    "jump": {
+        "x": 415,
+        "y": 190,
+        "width": 64,
+        "height": 64
+    },
+    "dead": {
+        "x": 520,
+        "y": 450,
+        "width": 64,
+        "height": 64
+    }
+}

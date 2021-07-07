@@ -22,12 +22,19 @@ export default class Game
 	public level: Level;
 	public mario: Mario;
 
+	public frames = 0;
+	public fps = 0;
+	public time = 0;
+	public previousTime = 0;
+	public deltaTime = 0;
+
 	private constructor() 
 	{
 		this.imageFactory = new ImageFactory();
 		this.imageFactory.registerImage("1-1", lvl1);
 		this.imageFactory.registerImage("1-1_col", lvl1_col);
 		this.imageFactory.registerImage("mario", mario);
+
 		this.load();
 		this.profile();
 	}
@@ -72,11 +79,19 @@ export default class Game
 		return Game.instance;
 	}
 	
-	private mainLoop()
+	private mainLoop(currentTime: number)
 	{
 		this.stats.begin();
-
 		this.canvas.clear();
+
+		// Clock
+		this.deltaTime = (currentTime - this.previousTime) / 1000;
+		this.fps = Math.round(1 / this.deltaTime);
+		this.time += Math.round(this.deltaTime * 1000);
+		this.previousTime = currentTime;
+		this.frames++;
+
+		// Game
 		this.level.frame();
 		this.mario.frame();
 

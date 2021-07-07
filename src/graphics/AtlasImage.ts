@@ -6,10 +6,22 @@ export default class AtlasImage
 	public bitmap: HTMLImageElement;
 	public sprites: Record<string, Texture> = {};
 	public loaded: boolean;
+	public json: Record<string, Rectangle>;
 
-	public constructor(texture: Texture)
+	public constructor(texture: Texture, json?: Record<string, Rectangle>)
 	{
 		this.bitmap = texture.bitmap;
+		this.json = json;
+		this.registerSpriteFromConfig(this.json);
+	}
+
+	public registerSpriteFromConfig(json: Record<string, Rectangle>)
+	{
+		Object.keys(json).forEach(k =>
+		{
+			const { x, y, width, height } = this.json[k];
+			this.registerSprite(k, new Rectangle(x, y, width, height));
+		});
 	}
 
 	public registerSprite(name: string, rect: Rectangle)

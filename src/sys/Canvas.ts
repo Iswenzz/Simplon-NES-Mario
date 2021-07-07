@@ -14,13 +14,18 @@ export default class Canvas
 		this.target.height = window.innerHeight;
 		this.target.width = window.innerWidth;
 
-		this.resolutionZoom = new Vector(this.target.width / 1024, 
-			this.target.height / 576);
-		this.resolutionZoom.multiply(new Vector(2.15, 2.15));
+		window.addEventListener("resize", this.initialize.bind(this));
 	}
 
 	public initialize()
 	{
+		this.target.height = window.innerHeight;
+		this.target.width = this.target.height * (16 / 9);
+
+		this.resolutionZoom = new Vector(this.target.width / 1024, 
+			this.target.height / 576);
+		this.resolutionZoom.multiply(new Vector(2.15, 2.15));
+
 		this.ctx = this.target.getContext("2d");
 		this.camera = new Camera();
 	}
@@ -56,5 +61,10 @@ export default class Canvas
 	public endDraw()
 	{
 		this.ctx.closePath();
+	}
+
+	public dispose()
+	{
+		window.removeEventListener("resize", this.initialize.bind(this));
 	}
 }

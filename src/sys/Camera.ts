@@ -28,6 +28,11 @@ export default class Camera
 		this.matrix.setTranslation(matrixPosition);
 	}
 
+	public scale(size: Vector)
+	{
+		this.matrix.setScale(size);
+	}
+
 	public renderLeft(bitmap: HTMLImageElement, position: Vector, size: Vector)
 	{
 		const matrix = Matrix3x2.create(this.matrix);

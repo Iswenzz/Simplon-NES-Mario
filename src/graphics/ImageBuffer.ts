@@ -1,4 +1,3 @@
-import Vector from "../math/Vector";
 import Texture from "./Texture";
 
 export default class ImageBuffer

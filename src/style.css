@@ -1,10 +1,16 @@
-html, body {
+body {
+    display: flex;
     margin: 0;
     padding: 0;
     overflow: hidden;
+    background-color: black;
+    justify-content: center;
+    align-items: center;
+    transform: scale(1.2);
 }
 
 canvas {
+    z-index: -1;
     image-rendering: optimizeSpeed;
     image-rendering: -moz-crisp-edges;
     image-rendering: -webkit-optimize-contrast;
