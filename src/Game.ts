@@ -7,6 +7,7 @@ import ImageFactory from "./graphics/ImageFactory";
 import * as Stats from "stats.js";
 
 import lvl1 from "./assets/1-1.jpg";
+import lvl1_col from "./assets/1-1_col.jpg";
 import mario from "./assets/mario_atlas.png";
 
 export default class Game
@@ -25,6 +26,7 @@ export default class Game
 	{
 		this.imageFactory = new ImageFactory();
 		this.imageFactory.registerImage("1-1", lvl1);
+		this.imageFactory.registerImage("1-1_col", lvl1_col);
 		this.imageFactory.registerImage("mario", mario);
 		this.load();
 		this.profile();
@@ -51,15 +53,13 @@ export default class Game
 
 	public initialize()
 	{
-		this.imageFactory = new ImageFactory();
-		this.imageFactory.registerImage("1-1", lvl1);
-		this.imageFactory.registerImage("mario", mario);
-
 		this.canvas = new Canvas("game");
 		this.canvas.initialize();
 		this.controls = new Controls();
 
-		this.level = new Level(lvl1);
+		this.level = new Level(
+			this.imageFactory.getImage("1-1"),
+			this.imageFactory.getImage("1-1_col"));
 		this.mario = new Mario(new Vector(200, 190));
 
 		window.requestAnimationFrame(this.mainLoop.bind(this));

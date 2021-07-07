@@ -14,7 +14,8 @@ export default class Canvas
 		this.target.height = window.innerHeight;
 		this.target.width = window.innerWidth;
 
-		this.resolutionZoom = new Vector(this.target.width / 1024, this.target.height / 576);
+		this.resolutionZoom = new Vector(this.target.width / 1024, 
+			this.target.height / 576);
 		this.resolutionZoom.multiply(new Vector(2.15, 2.15));
 	}
 
