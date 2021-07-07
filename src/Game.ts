@@ -3,22 +3,58 @@ import Level from "./world/Level";
 import Vector from "./math/Vector";
 import Canvas from "./sys/Canvas";
 import Controls from "./sys/Controls";
+import ImageFactory from "./graphics/ImageFactory";
+import * as Stats from "stats.js";
+
 import lvl1 from "./assets/1-1.jpg";
+import mario from "./assets/mario_atlas.png";
 
 export default class Game
 {
 	private static instance: Game;
+	public stats: Stats;
 
 	public canvas: Canvas;
 	public controls: Controls;
+	public imageFactory: ImageFactory;
 
 	public level: Level;
 	public mario: Mario;
 
-	private constructor() { }
+	private constructor() 
+	{
+		this.imageFactory = new ImageFactory();
+		this.imageFactory.registerImage("1-1", lvl1);
+		this.imageFactory.registerImage("mario", mario);
+		this.load();
+		this.profile();
+	}
+
+	public profile()
+	{
+		this.stats = new Stats();
+		this.stats.showPanel(0);
+		document.body.appendChild(this.stats.dom);
+	}
+
+	public load()
+	{
+		const loadImages = setInterval(() => 
+		{
+			if (this.imageFactory.isAllLoaded())
+			{
+				this.initialize();
+				clearInterval(loadImages);
+			}
+		}, 100);
+	}
 
 	public initialize()
 	{
+		this.imageFactory = new ImageFactory();
+		this.imageFactory.registerImage("1-1", lvl1);
+		this.imageFactory.registerImage("mario", mario);
+
 		this.canvas = new Canvas("game");
 		this.canvas.initialize();
 		this.controls = new Controls();
@@ -38,10 +74,13 @@ export default class Game
 	
 	private mainLoop()
 	{
+		this.stats.begin();
+
 		this.canvas.clear();
 		this.level.frame();
 		this.mario.frame();
 
+		this.stats.end();
 		window.requestAnimationFrame(this.mainLoop.bind(this));
 	}
 }

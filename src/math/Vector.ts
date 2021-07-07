@@ -9,7 +9,7 @@ export default class Vector
 		this.y = y;
 	}
 
-	public static create(vec?: Vector)
+	public static copy(vec?: Vector)
 	{
 		return vec ? new Vector(vec.x, vec.y) : new Vector(0, 0);
 	}

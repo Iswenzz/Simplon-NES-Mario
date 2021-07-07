@@ -20,8 +20,8 @@ export default class Level implements IRenderable
 		this.bitmap = new Image();
 		this.bitmap.src = bitmapPath;
 
-		this.originalPosition = Vector.create(topLeftVector);
-		this.position = Vector.create(this.originalPosition);
+		this.originalPosition = Vector.copy(topLeftVector);
+		this.position = Vector.copy(this.originalPosition);
 		this.size = new Vector(this.bitmap.width, this.bitmap.height);
 	}
 

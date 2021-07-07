@@ -16,6 +16,9 @@ export default class Camera
 		this.canvas = canvas;
 		this.matrix = new Matrix3x2(this.canvas.resolutionZoom.x, 0, 0, 
 			this.canvas.resolutionZoom.y, 0, 0);
+		this.canvas.ctx.setTransform(this.matrix.m11, this.matrix.m12, 
+			this.matrix.m21, this.matrix.m22,
+			this.matrix.dx, this.matrix.dy);
 	}
 
 	public translateX(value: number)
