@@ -33,12 +33,9 @@ export default class Animation implements IRenderable
 
 	public frame()
 	{
+		// Rotate the ids
 		if (this.game.time % this.interval === 0)
-		{
-			// Rotate the ids
 			this.animationIds.push(...this.animationIds.splice(0, 1));
-			console.log(this.animationIds);
-		}
 		this.atlas.setSprite(this.animationIds[0]);
 	}
 }

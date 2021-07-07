@@ -37,7 +37,7 @@ export default class Level implements IRenderable
 			topRight: this.colmap.colorAt(rectangle.x + rectangle.width, rectangle.y),
 			bottomLeft: this.colmap.colorAt(rectangle.x, rectangle.y + rectangle.height),
 		};
-		// console.log(corners);
+		console.log(corners);
 		return selectedCorners.some(k => corners[k].r === 0);
 	}
 

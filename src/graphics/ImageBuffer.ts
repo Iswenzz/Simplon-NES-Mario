@@ -9,11 +9,12 @@ export default class ImageBuffer
 	{
 		this.bitmap = texture.bitmap;
 		this.buffer = this.getImageBuffer(texture);
+		console.log(this.buffer);
 	}
 
 	public colorAt(x: number, y: number)
 	{
-		const pixelOffset = (y * this.buffer.width + x) * 4;
+		const pixelOffset = y * this.buffer.width + x;
 		return {
 			r: this.buffer.data[pixelOffset],
 			g: this.buffer.data[pixelOffset + 1],
