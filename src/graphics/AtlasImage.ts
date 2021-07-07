@@ -7,6 +7,7 @@ export default class AtlasImage
 	public sprites: Record<string, Texture> = {};
 	public loaded: boolean;
 	public json: Record<string, Rectangle>;
+	public currentAtlas: Texture;
 
 	public constructor(texture: Texture, json?: Record<string, Rectangle>)
 	{
@@ -44,5 +45,10 @@ export default class AtlasImage
 	public getSprite(name: string): Texture
 	{
 		return this.sprites[name];
+	}
+
+	public setSprite(name: string)
+	{
+		this.currentAtlas = this.sprites[name];
 	}
 }

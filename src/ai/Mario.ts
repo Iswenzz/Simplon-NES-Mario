@@ -6,13 +6,13 @@ import Rectangle from "../math/Rectangle";
 import Texture from "../graphics/Texture";
 import AtlasImage from "../graphics/AtlasImage";
 import marioAtlas from "../assets/mario_atlas.json";
+import Animation from "../graphics/Animation";
 
 export default class Mario implements IRenderable
 {
 	private game: Game;
 	
 	public atlas: AtlasImage;
-	public currentAtlas: Texture;
 	public size: Vector;
 
 	public rectangle: Rectangle;
@@ -25,6 +25,8 @@ export default class Mario implements IRenderable
 	public gravity: number;
 	public speed: number;
 
+	public sprintAnimation: Animation;
+
 	public isJumping = false;
 	public isSprinting = false;
 
@@ -34,7 +36,7 @@ export default class Mario implements IRenderable
 
 		this.size = new Vector(18, 18);
 		this.atlas = new AtlasImage(this.game.imageFactory.getImage("mario"), marioAtlas);
-		this.currentAtlas = this.atlas.getSprite("idle");
+		this.sprintAnimation = new Animation(this.atlas, "sprint", 3);
 
 		this.spawnVector = spawnVector;
 		this.position = Vector.copy(this.spawnVector);
@@ -52,18 +54,17 @@ export default class Mario implements IRenderable
 		const predictedMove = Rectangle.copy(this.rectangle);
 		predictedMove.y += this.velocity.y + this.gravity;
 		const test = this.game.level.intersect(predictedMove, "bottomLeft", "bottomRight");
-		console.log(test);
 
 		if (this.isJumping && this.position.y >= 190)
 		{
 			this.position.y = 190;
 			this.velocity = Vector.copy(this.originalVelocity);
 			this.isJumping = false;
-			this.currentAtlas = this.atlas.getSprite("idle");
+			this.atlas.setSprite("idle");
 			return;
 		}
 
-		this.currentAtlas = this.atlas.getSprite("jump");
+		this.atlas.setSprite("jump");
 		this.isJumping = true;
 		this.velocity.y += this.gravity * this.game.deltaTime;
 		this.position.x += this.velocity.x;
@@ -72,22 +73,46 @@ export default class Mario implements IRenderable
 
 	public run()
 	{
-		if (this.game.time % (this.isSprinting ? 10 : 20) === 0)
+		this.sprintAnimation.setInterval(this.isSprinting ? 10 : 20);
+		this.sprintAnimation.frame();
+	}
+
+	public moveLeft()
+	{
+		this.rectangle.setRect(
+			this.position.x, this.position.y, 
+			this.size.x, this.size.y);
+			
+		const value = this.speed * this.game.deltaTime;
+		this.direction = Direction.LEFT;
+		const predictedMove = Rectangle.copy(this.rectangle);
+		predictedMove.x -= value;
+
+		if (!this.game.level.intersect(predictedMove, "topLeft", "bottomLeft"))
 		{
-			switch (this.currentAtlas.name)
-			{
-				default:
-				case "sprint_a": 
-					this.currentAtlas = this.atlas.getSprite("sprint_c");
-					break;
-				case "sprint_b": 
-					this.currentAtlas = this.atlas.getSprite("sprint_b");
-					break;
-				case "sprint_c": 
-					this.currentAtlas = this.atlas.getSprite("sprint_a");
-					break;
-			}
+			this.position.x -= value;
+			this.game.canvas.camera.translateX(value);
 		}
+		this.run();
+	}
+
+	public moveRight()
+	{
+		this.rectangle.setRect(
+			this.position.x - this.rectangle.width, this.position.y, 
+			this.size.x, this.size.y);
+			
+		const value = this.speed * this.game.deltaTime;
+		this.direction = Direction.RIGHT;
+		const predictedMove = Rectangle.copy(this.rectangle);
+		predictedMove.x += value;
+
+		if (!this.game.level.intersect(predictedMove, "topRight", "bottomRight"))
+		{
+			this.position.x += value;
+			this.game.canvas.camera.translateX(-value);
+		}
+		this.run();
 	}
 
 	public frame()
@@ -98,56 +123,23 @@ export default class Mario implements IRenderable
 
 		// Directions
 		if (this.game.controls.keysDown["ArrowRight"])
-		{
-			this.rectangle.setRect(
-				this.position.x - this.rectangle.width, this.position.y, 
-				this.size.x, this.size.y);
-				
-			const value = this.speed * this.game.deltaTime;
-			console.log(value);
-			this.direction = Direction.RIGHT;
-			const predictedMove = Rectangle.copy(this.rectangle);
-			predictedMove.x += value;
-
-			if (!this.game.level.intersect(predictedMove, "topRight", "bottomRight"))
-			{
-				this.position.x += value;
-				this.game.canvas.camera.translateX(-value);
-			}
-			this.run();
-		}
+			this.moveRight();
 		else if (this.game.controls.keysDown["ArrowLeft"])
-		{
-			this.rectangle.setRect(
-				this.position.x, this.position.y, 
-				this.size.x, this.size.y);
-				
-			const value = this.speed * this.game.deltaTime;
-			this.direction = Direction.LEFT;
-			const predictedMove = Rectangle.copy(this.rectangle);
-			predictedMove.x -= value;
-
-			if (!this.game.level.intersect(predictedMove, "topLeft", "bottomLeft"))
-			{
-				this.position.x -= value;
-				this.game.canvas.camera.translateX(value);
-			}
-			this.run();
-		}
+			this.moveLeft();
 		else
-			this.currentAtlas = this.atlas.getSprite("idle");
+			this.atlas.setSprite("idle");
 
 		// Jump
 		if (this.isJumping || this.game.controls.keysDown["ArrowUp"])
 			this.jump();
 
 		// Render image
-		if (this.currentAtlas.loaded)
+		if (this.atlas.currentAtlas.loaded)
 		{
 			if (this.direction === Direction.LEFT)
-				this.game.canvas.renderLeft(this.currentAtlas.bitmap, this.position, this.size);
+				this.game.canvas.renderLeft(this.atlas.currentAtlas.bitmap, this.position, this.size);
 			else
-				this.game.canvas.renderRight(this.currentAtlas.bitmap, this.position, this.size);
+				this.game.canvas.renderRight(this.atlas.currentAtlas.bitmap, this.position, this.size);
 		}
 	}
 }

@@ -5,19 +5,19 @@
         "width": 64,
         "height": 64
     } ,
-    "sprint_a": {
+    "sprint0": {
         "x": 240,
         "y": 190,
         "width": 64,
         "height": 64
     },
-    "sprint_b": {
+    "sprint1": {
         "x": 140,
         "y": 190,
         "width": 64,
         "height": 64
     } ,
-    "sprint_c": {
+    "sprint2": {
         "x": 40,
         "y": 190,
         "width": 64,
