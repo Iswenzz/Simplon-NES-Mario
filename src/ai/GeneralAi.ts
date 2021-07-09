@@ -18,6 +18,7 @@ export default class GeneralAi extends AbstractAi implements IRenderable
 	public sprintAnimation: Animation;
 
 	public isJumping: boolean;
+	public isFalling: boolean;
 	public isSprinting: boolean;
 
 	public constructor(spawnVector?: Vector)
@@ -25,17 +26,39 @@ export default class GeneralAi extends AbstractAi implements IRenderable
 		super(spawnVector);
 
 		this.direction = Direction.LEFT;
-		this.originalVelocity = new Vector(0, -4);
+		this.originalVelocity = new Vector(0, 0);
 		this.velocity = Vector.copy(this.originalVelocity);
 		this.gravity = 15;
+	}
+
+	public fall()
+	{
+		const predictedMove = Rectangle.copy(this.rectangle);
+		const value = Math.abs(Math.round(this.velocity.y + (this.gravity * this.game.deltaTime)));
+		predictedMove.y += value;
+
+		if (!this.game.level.intersect(predictedMove, "bottomLeft", "bottomRight"))
+		{
+			if (this.velocity.y < 0)
+				this.velocity.y = 0;
+
+			this.isFalling = true;
+			this.velocity.y += this.gravity * this.game.deltaTime;
+			this.position.y += this.velocity.y;
+		}
+		else
+		{
+			this.velocity = Vector.copy(this.originalVelocity);
+			this.isFalling = false;
+		}
 	}
 
 	public jump()
 	{
 		const predictedMove = Rectangle.copy(this.rectangle);
-		predictedMove.y += this.velocity.y + (this.gravity * this.game.deltaTime);
+		predictedMove.y += Math.abs(Math.round(this.velocity.y + (this.gravity * this.game.deltaTime)));
 
-		if (this.isJumping && this.game.level.intersect(predictedMove, "bottomLeft", "bottomRight"))
+		if (this.isJumping && this.game.level.intersect(predictedMove, "bottomLeft", "bottomRight", "topLeft", "topRight"))
 		{
 			this.velocity = Vector.copy(this.originalVelocity);
 			this.isJumping = false;
@@ -46,7 +69,6 @@ export default class GeneralAi extends AbstractAi implements IRenderable
 		this.atlas.setSprite("jump");
 		this.isJumping = true;
 		this.velocity.y += this.gravity * this.game.deltaTime;
-		this.position.x += this.velocity.x;
 		this.position.y += this.velocity.y;
 	}
 
@@ -104,6 +126,8 @@ export default class GeneralAi extends AbstractAi implements IRenderable
 		// Jump
 		if (this.isJumping)
 			this.jump();
+		else
+			this.fall();
 
 		// Render image
 		if (this.atlas.currentAtlas.loaded)

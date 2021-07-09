@@ -67,7 +67,7 @@ export default class Game
 		this.level = new Level(
 			this.imageFactory.getImage("1-1"),
 			this.imageFactory.getImage("1-1_col"));
-		this.mario = new Mario(new Vector(200, 190));
+		this.mario = new Mario(new Vector(250, 120));
 
 		window.requestAnimationFrame(this.mainLoop.bind(this));
 	}

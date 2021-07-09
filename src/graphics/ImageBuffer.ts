@@ -22,16 +22,12 @@ export default class ImageBuffer
 
 	public colorAt(point: Vector): Color
 	{
-		const pixelOffset = Math.round(point.y * 4 * point.x);
-		
-		// console.log(point, pixelOffset);
-		Game.getInstance().canvas.ctx.fillStyle = "blue";
-		Game.getInstance().canvas.ctx.fillRect(point.x, point.y, 1, 1);
+		const pixelOffset = Math.round(Math.round(point.y) * this.buffer.width + Math.round(point.x)) * 4;
 		return {
 			r: this.buffer.data[pixelOffset],
 			g: this.buffer.data[pixelOffset + 1],
 			b: this.buffer.data[pixelOffset + 2],
-			a: this.buffer.data[pixelOffset + 3],
+			a: this.buffer.data[pixelOffset + 3]
 		};
 	}
 

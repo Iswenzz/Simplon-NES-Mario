@@ -1,7 +1,6 @@
 import Game from "../Game";
 import IRenderable from "../IRenderable";
 import AtlasImage from "./AtlasImage";
-import Texture from "./Texture";
 
 export default class Animation implements IRenderable
 {

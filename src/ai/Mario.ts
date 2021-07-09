@@ -39,6 +39,8 @@ export default class Mario extends GeneralAi implements IRenderable
 		// Jump
 		if (this.isJumping || this.game.controls.keysDown["ArrowUp"])
 			this.jump();
+		else
+			this.fall();
 
 		// Render image
 		if (this.atlas.currentAtlas.loaded)
