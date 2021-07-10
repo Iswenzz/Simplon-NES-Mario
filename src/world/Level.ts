@@ -1,10 +1,11 @@
 import Canvas from "../sys/Canvas";
-import IRenderable from "../IRenderable";
+import IRenderable from "../graphics/IRenderable";
 import Game from "../Game";
 import Vector from "../math/Vector";
 import Texture from "../graphics/Texture";
 import ImageBuffer from "../graphics/ImageBuffer";
 import Rectangle, { Corners } from "../math/Rectangle";
+import PixelType from "../utils/PixelType";
 
 export default class Level implements IRenderable
 {
@@ -29,7 +30,8 @@ export default class Level implements IRenderable
 		this.size = new Vector(this.bitmap.width, this.bitmap.height);
 	} 
 
-	public intersect(rectangle: Rectangle, ...selectedCorners: (keyof Corners)[]): boolean
+	public intersect(rectangle: Rectangle, type: PixelType, 
+		...selectedCorners: (keyof Corners)[]): boolean
 	{
 		const corners = {
 			topLeft: this.colmap.colorAt(rectangle.getTopLeft()),
@@ -37,7 +39,18 @@ export default class Level implements IRenderable
 			topRight: this.colmap.colorAt(rectangle.getTopRight()),
 			bottomLeft: this.colmap.colorAt(rectangle.getBottomLeft()),
 		};
-		return selectedCorners.some(k => corners[k].r === 0);
+		return selectedCorners.some(k =>
+		{
+			switch (type)
+			{
+				case PixelType.COLLISION:
+					return corners[k].r === 0 && corners[k].g === 0 && corners[k].b === 0;
+				case PixelType.DEATH:
+					return corners[k].r === 255 && corners[k].g === 0 && corners[k].b === 0;
+				case PixelType.FLAG:
+					return corners[k].r === 0 && corners[k].g === 255 && corners[k].b === 0;
+			}
+		});
 	}
 
 	public frame()

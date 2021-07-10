@@ -14,6 +14,7 @@ export default class AtlasImage
 		this.bitmap = texture.bitmap;
 		this.json = json;
 		this.registerSpriteFromConfig(this.json);
+		this.currentAtlas = new Texture(null, null, false);
 	}
 
 	public registerSpriteFromConfig(json: Record<string, Rectangle>)
