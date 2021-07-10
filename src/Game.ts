@@ -7,8 +7,9 @@ import ImageFactory from "./graphics/ImageFactory";
 import * as Stats from "stats.js";
 
 import lvl1 from "./assets/1-1.jpg";
-import lvl1_col from "./assets/1-1_col.jpg";
+import lvl1_col from "./assets/1-1_col.png";
 import mario from "./assets/mario_atlas.png";
+import L1_1 from "./world/level/1-1";
 
 export default class Game
 {
@@ -58,16 +59,20 @@ export default class Game
 		}, 100);
 	}
 
+	/**
+	 * Initialize the game.
+	 * @todo - Game configuration
+	 * @todo - Game save
+	 * @todo - Dynamic assets loading
+	 */
 	public initialize()
 	{
 		this.canvas = new Canvas("game");
 		this.canvas.initialize();
 		this.controls = new Controls();
 
-		this.level = new Level(
-			this.imageFactory.getImage("1-1"),
-			this.imageFactory.getImage("1-1_col"));
-		this.mario = new Mario(new Vector(250, 120));
+		this.level = new L1_1();
+		this.mario = new Mario(this.level.spawnPoint);
 
 		window.requestAnimationFrame(this.mainLoop.bind(this));
 	}

@@ -6,7 +6,7 @@ import AtlasImage from "../graphics/AtlasImage";
 import marioAtlas from "../assets/mario_atlas.json";
 import Animation from "../graphics/Animation";
 import Action from "../utils/Action";
-import bound from "../utils/Bound";
+import PixelType from "../utils/PixelType";
 
 export default class Mario extends GeneralAi implements IRenderable
 {
@@ -32,12 +32,17 @@ export default class Mario extends GeneralAi implements IRenderable
 
 	public frame()
 	{
+		// Controls
 		Action.callback(this.game.controls.keysDown["Shift"], this.sprint.bind(this), this.sprint.bind(this));
-		Action.callback(this.isJumping || this.game.controls.keysDown["ArrowUp"], 
-			this.jump.bind(this), this.fall.bind(this));
 		if (!Action.callback(this.game.controls.keysDown["ArrowRight"], this.moveRight.bind(this)) &&
 			!Action.callback(this.game.controls.keysDown["ArrowLeft"], this.moveLeft.bind(this)))
 			this.idle();
+		Action.callback(this.isJumping || this.game.controls.keysDown["ArrowUp"], 
+			this.jump.bind(this), this.fall.bind(this));
+
+		// Triggers
+		Action.callback(this.game.level.intersect(this.rectangle, PixelType.DEATH), this.kill.bind(this));
+		Action.callback(this.game.level.intersect(this.rectangle, PixelType.FLAG), () => console.log("flag"));
 
 		// Render image
 		if (this.atlas.currentAtlas.loaded)

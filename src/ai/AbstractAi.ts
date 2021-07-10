@@ -31,6 +31,7 @@ export default abstract class AbstractAi implements IRenderable
 			this.size.x, this.size.y);
 	}
 
+	public abstract damage(value: number): void;
 	public abstract kill(): void;
 	public abstract frame(): void;
 }

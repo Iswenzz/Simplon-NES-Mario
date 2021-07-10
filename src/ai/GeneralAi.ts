@@ -40,7 +40,7 @@ export default class GeneralAi extends AbstractAi implements IRenderable
 		predictedMove.y += value;
 
 		if (!this.game.level.intersect(predictedMove, PixelType.COLLISION, 
-			"bottomLeft", "bottomRight"))
+			["bottomLeft", "bottomRight"]))
 		{
 			if (this.velocity.y < 0)
 				this.velocity.y = 0;
@@ -61,8 +61,7 @@ export default class GeneralAi extends AbstractAi implements IRenderable
 		const predictedMove = Rectangle.copy(this.rectangle);
 		predictedMove.y += Math.abs(Math.round(this.velocity.y + (this.gravity * this.game.deltaTime)));
 
-		if (this.isJumping && this.game.level.intersect(predictedMove, PixelType.COLLISION, 
-			"bottomLeft", "bottomRight", "topLeft", "topRight"))
+		if (this.isJumping && this.game.level.intersect(predictedMove, PixelType.COLLISION))
 		{
 			this.velocity = Vector.copy(this.originalVelocity);
 			this.isJumping = false;
@@ -82,7 +81,16 @@ export default class GeneralAi extends AbstractAi implements IRenderable
 		this.sprintAnimation.frame();
 	}
 
-	public kill() { }
+	public kill() 
+	{
+		this.health = 0;
+		this.atlas.setSprite("death");
+	}
+
+	public damage(value: number) 
+	{ 
+		this.health -= value;
+	}
 
 	public moveLeft()
 	{	
@@ -92,7 +100,7 @@ export default class GeneralAi extends AbstractAi implements IRenderable
 		predictedMove.x -= value;
 
 		if (!this.game.level.intersect(predictedMove, PixelType.COLLISION,
-			"topLeft", "bottomLeft"))
+			["topLeft", "bottomLeft"]))
 		{
 			this.position.x -= value;
 			this.game.canvas.camera.translateX(value);
@@ -108,7 +116,7 @@ export default class GeneralAi extends AbstractAi implements IRenderable
 		predictedMove.x += value;
 
 		if (!this.game.level.intersect(predictedMove, PixelType.COLLISION,
-			"topRight", "bottomRight"))
+			["topRight", "bottomRight"]))
 		{
 			this.position.x += value;
 			this.game.canvas.camera.translateX(-value);
@@ -128,11 +136,12 @@ export default class GeneralAi extends AbstractAi implements IRenderable
 
 	public frame()
 	{
+		// Controls
 		Action.callback(this.isSprinting, this.sprint.bind(this), this.sprint.bind(this));
-		Action.callback(this.isJumping, this.jump.bind(this), this.fall.bind(this));
 		if (!Action.callback(this.direction === Direction.RIGHT, this.moveRight.bind(this)) &&
 			!Action.callback(this.direction === Direction.LEFT, this.moveLeft.bind(this)))
 			this.idle();
+		Action.callback(this.isJumping, this.jump.bind(this), this.fall.bind(this));
 
 		// Render image
 		if (this.atlas.currentAtlas.loaded)

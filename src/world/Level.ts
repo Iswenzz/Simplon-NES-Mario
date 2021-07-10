@@ -17,6 +17,9 @@ export default class Level implements IRenderable
 	public position: Vector;
 	public size: Vector;
 
+	public spawnPoint: Vector;
+	public isCompleted: boolean;
+
 	public constructor(texture: Texture, colmap: Texture, topLeftVector?: Vector)
 	{
 		const { canvas } = Game.getInstance();
@@ -31,7 +34,7 @@ export default class Level implements IRenderable
 	} 
 
 	public intersect(rectangle: Rectangle, type: PixelType, 
-		...selectedCorners: (keyof Corners)[]): boolean
+		selectedCorners: (keyof Corners)[] = ["topLeft", "bottomRight", "topRight", "bottomLeft"]): boolean
 	{
 		const corners = {
 			topLeft: this.colmap.colorAt(rectangle.getTopLeft()),

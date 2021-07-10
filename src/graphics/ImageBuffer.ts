@@ -1,4 +1,3 @@
-import Game from "../Game";
 import Vector from "../math/Vector";
 import Texture from "./Texture";
 
