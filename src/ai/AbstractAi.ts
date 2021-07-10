@@ -1,6 +1,6 @@
 import Game from "../Game";
 import AtlasImage from "../graphics/AtlasImage";
-import IRenderable from "../IRenderable";
+import IRenderable from "../graphics/IRenderable";
 import Rectangle from "../math/Rectangle";
 import Vector from "../math/Vector";
 

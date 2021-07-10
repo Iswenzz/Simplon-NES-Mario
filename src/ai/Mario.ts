@@ -1,10 +1,12 @@
-import IRenderable from "../IRenderable";
+import IRenderable from "../graphics/IRenderable";
 import Direction from "../utils/Direction";
 import Vector from "../math/Vector";
 import GeneralAi from "./GeneralAI";
 import AtlasImage from "../graphics/AtlasImage";
 import marioAtlas from "../assets/mario_atlas.json";
 import Animation from "../graphics/Animation";
+import Action from "../utils/Action";
+import bound from "../utils/Bound";
 
 export default class Mario extends GeneralAi implements IRenderable
 {
@@ -22,25 +24,20 @@ export default class Mario extends GeneralAi implements IRenderable
 		this.gravity = 15;
 	}
 
-	public frame()
+	public sprint()
 	{
-		// Sprint
 		this.isSprinting = this.game.controls.keysDown["Shift"];
 		this.speed = this.isSprinting ? 220 : 150;
+	}
 
-		// Directions
-		if (this.game.controls.keysDown["ArrowRight"])
-			this.moveRight();
-		else if (this.game.controls.keysDown["ArrowLeft"])
-			this.moveLeft();
-		else
-			this.atlas.setSprite("idle");
-
-		// Jump
-		if (this.isJumping || this.game.controls.keysDown["ArrowUp"])
-			this.jump();
-		else
-			this.fall();
+	public frame()
+	{
+		Action.callback(this.game.controls.keysDown["Shift"], this.sprint.bind(this), this.sprint.bind(this));
+		Action.callback(this.isJumping || this.game.controls.keysDown["ArrowUp"], 
+			this.jump.bind(this), this.fall.bind(this));
+		if (!Action.callback(this.game.controls.keysDown["ArrowRight"], this.moveRight.bind(this)) &&
+			!Action.callback(this.game.controls.keysDown["ArrowLeft"], this.moveLeft.bind(this)))
+			this.idle();
 
 		// Render image
 		if (this.atlas.currentAtlas.loaded)

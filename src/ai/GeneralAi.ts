@@ -1,8 +1,10 @@
 import Animation from "../graphics/Animation";
-import IRenderable from "../IRenderable";
+import IRenderable from "../graphics/IRenderable";
 import Rectangle from "../math/Rectangle";
 import Vector from "../math/Vector";
+import Action from "../utils/Action";
 import Direction from "../utils/Direction";
+import PixelType from "../utils/PixelType";
 import AbstractAi from "./AbstractAi";
 
 export default class GeneralAi extends AbstractAi implements IRenderable
@@ -37,7 +39,8 @@ export default class GeneralAi extends AbstractAi implements IRenderable
 		const value = Math.abs(Math.round(this.velocity.y + (this.gravity * this.game.deltaTime)));
 		predictedMove.y += value;
 
-		if (!this.game.level.intersect(predictedMove, "bottomLeft", "bottomRight"))
+		if (!this.game.level.intersect(predictedMove, PixelType.COLLISION, 
+			"bottomLeft", "bottomRight"))
 		{
 			if (this.velocity.y < 0)
 				this.velocity.y = 0;
@@ -58,7 +61,8 @@ export default class GeneralAi extends AbstractAi implements IRenderable
 		const predictedMove = Rectangle.copy(this.rectangle);
 		predictedMove.y += Math.abs(Math.round(this.velocity.y + (this.gravity * this.game.deltaTime)));
 
-		if (this.isJumping && this.game.level.intersect(predictedMove, "bottomLeft", "bottomRight", "topLeft", "topRight"))
+		if (this.isJumping && this.game.level.intersect(predictedMove, PixelType.COLLISION, 
+			"bottomLeft", "bottomRight", "topLeft", "topRight"))
 		{
 			this.velocity = Vector.copy(this.originalVelocity);
 			this.isJumping = false;
@@ -82,12 +86,13 @@ export default class GeneralAi extends AbstractAi implements IRenderable
 
 	public moveLeft()
 	{	
-		const value = this.speed * this.game.deltaTime;
+		const value = Math.round(this.speed * this.game.deltaTime);
 		this.direction = Direction.LEFT;
 		const predictedMove = Rectangle.copy(this.rectangle);
 		predictedMove.x -= value;
 
-		if (!this.game.level.intersect(predictedMove, "topLeft", "bottomLeft"))
+		if (!this.game.level.intersect(predictedMove, PixelType.COLLISION,
+			"topLeft", "bottomLeft"))
 		{
 			this.position.x -= value;
 			this.game.canvas.camera.translateX(value);
@@ -97,12 +102,13 @@ export default class GeneralAi extends AbstractAi implements IRenderable
 
 	public moveRight()
 	{
-		const value = this.speed * this.game.deltaTime;
+		const value = Math.round(this.speed * this.game.deltaTime);
 		this.direction = Direction.RIGHT;
 		const predictedMove = Rectangle.copy(this.rectangle);
 		predictedMove.x += value;
 
-		if (!this.game.level.intersect(predictedMove, "topRight", "bottomRight"))
+		if (!this.game.level.intersect(predictedMove, PixelType.COLLISION,
+			"topRight", "bottomRight"))
 		{
 			this.position.x += value;
 			this.game.canvas.camera.translateX(-value);
@@ -110,24 +116,23 @@ export default class GeneralAi extends AbstractAi implements IRenderable
 		this.run();
 	}
 
+	public idle()
+	{
+		this.atlas.setSprite("idle");
+	}
+
+	public sprint()
+	{
+		this.speed = this.isSprinting ? this.sprintSpeed : this.walkSpeed;
+	}
+
 	public frame()
 	{
-		// Sprint
-		this.speed = this.isSprinting ? this.sprintSpeed : this.walkSpeed;
-
-		// Directions
-		if (this.direction === Direction.RIGHT)
-			this.moveRight();
-		else if (this.direction === Direction.LEFT)
-			this.moveLeft();
-		else
-			this.atlas.setSprite("idle");
-
-		// Jump
-		if (this.isJumping)
-			this.jump();
-		else
-			this.fall();
+		Action.callback(this.isSprinting, this.sprint.bind(this), this.sprint.bind(this));
+		Action.callback(this.isJumping, this.jump.bind(this), this.fall.bind(this));
+		if (!Action.callback(this.direction === Direction.RIGHT, this.moveRight.bind(this)) &&
+			!Action.callback(this.direction === Direction.LEFT, this.moveLeft.bind(this)))
+			this.idle();
 
 		// Render image
 		if (this.atlas.currentAtlas.loaded)
