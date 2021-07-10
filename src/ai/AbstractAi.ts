@@ -13,26 +13,46 @@ export default abstract class AbstractAi implements IRenderable
 
 	public rectangle: Rectangle;
 	public position: Vector;
-	public spawnVector: Vector;
+	public spawnPoint: Vector;
 
 	public health: number;
 	public maxHealth: number;
 	public receiveDamage = true;
 	public canDamage = true;
+	public canControl = true;
 	public isDead = false;
 
-	protected constructor(spawnVector?: Vector)
+	protected constructor(spawnPoint?: Vector)
 	{
 		this.game = Game.getInstance();
 
+		this.maxHealth = 100;
+		this.health = this.maxHealth;
+		
 		this.size = new Vector(18, 18);
-		this.spawnVector = spawnVector;
-		this.position = Vector.copy(this.spawnVector);
+		this.spawnPoint = spawnPoint;
+		this.position = Vector.copy(this.spawnPoint);
 		this.rectangle = new Rectangle(this.position.x, this.position.y, 
 			this.size.x, this.size.y);
 	}
 
-	public abstract damage(value: number): void;
-	public abstract kill(): void;
-	public abstract frame(): void;
+	public damage(value: number)
+	{
+		if (this.receiveDamage)
+			this.health -= value;
+	}
+
+	public kill()
+	{
+		this.isDead = true;
+		this.canControl = false;
+		this.canDamage = false;
+		this.receiveDamage = false;
+		this.health = 0;
+	}
+
+	public frame()
+	{
+		this.rectangle.setRect(this.position.x, this.position.y, this.size.x, this.size.y);
+	}
 }

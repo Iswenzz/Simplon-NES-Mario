@@ -23,10 +23,11 @@ export default class GeneralAi extends AbstractAi implements IRenderable
 	public isJumping = false;
 	public isFalling = false;
 	public isSprinting = false;
+	public deathDone = false;
 
-	public constructor(spawnVector?: Vector)
+	public constructor(spawnPoint?: Vector)
 	{
-		super(spawnVector);
+		super(spawnPoint);
 
 		this.life = 1;
 		this.direction = Direction.LEFT;
@@ -144,17 +145,9 @@ export default class GeneralAi extends AbstractAi implements IRenderable
 	public kill() 
 	{
 		this.life--;
-		this.isDead = true;
-		this.canDamage = false;
-		this.receiveDamage = false;
-		this.health = 0;
+		super.kill();
 		this.atlas.setSprite("death");
-	}
-
-	public damage(value: number) 
-	{ 
-		if (this.receiveDamage)
-			this.health -= value;
+		this.deathDone = true;
 	}
 
 	public frame()
@@ -162,10 +155,10 @@ export default class GeneralAi extends AbstractAi implements IRenderable
 		// Events
 		this.idle();
 		this.sprint();
-		this.jump();
-		this.fall();
 		this.moveLeft();
 		this.moveRight();
+		this.fall();
+		this.jump();
 		this.kill();
 
 		// Render image
@@ -176,6 +169,6 @@ export default class GeneralAi extends AbstractAi implements IRenderable
 			else
 				this.game.canvas.renderRight(this.atlas.currentAtlas.bitmap, this.position, this.size);
 		}
-		this.rectangle.setRect(this.position.x, this.position.y, this.size.x, this.size.y);
+		super.frame();
 	}
 }

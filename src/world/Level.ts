@@ -9,7 +9,7 @@ import PixelType from "../utils/PixelType";
 
 export default class Level implements IRenderable
 {
-	private canvas: Canvas;
+	protected game: Game;
 
 	public bitmap: HTMLImageElement;
 	public colmap: ImageBuffer;
@@ -22,16 +22,19 @@ export default class Level implements IRenderable
 
 	public constructor(texture: Texture, colmap: Texture, topLeftVector?: Vector)
 	{
-		const { canvas } = Game.getInstance();
-
-		this.canvas = canvas;
+		this.game = Game.getInstance();
 		this.bitmap = texture.bitmap;
 		this.colmap = new ImageBuffer(colmap);
 
 		this.originalPosition = Vector.copy(topLeftVector);
 		this.position = Vector.copy(this.originalPosition);
 		this.size = new Vector(this.bitmap.width, this.bitmap.height);
-	} 
+	}
+
+	public respawn()
+	{
+		this.game.mario.position = Vector.copy(this.originalPosition);
+	}
 
 	public intersect(rectangle: Rectangle, type: PixelType, 
 		selectedCorners: (keyof Corners)[] = ["topLeft", "bottomRight", "topRight", "bottomLeft"]): boolean
@@ -58,6 +61,6 @@ export default class Level implements IRenderable
 
 	public frame()
 	{
-		this.canvas.render(this.bitmap, this.position, this.size);
+		this.game.canvas.render(this.bitmap, this.position, this.size);
 	}
 }

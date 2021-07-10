@@ -1,22 +1,20 @@
-import IRenderable from "../graphics/IRenderable";
-import Direction from "../utils/Direction";
-import Vector from "../math/Vector";
-import GeneralAi from "./GeneralAI";
-import AtlasImage from "../graphics/AtlasImage";
-import Animation from "../graphics/Animation";
-import Action from "../utils/Action";
-import PixelType from "../utils/PixelType";
-import KeyDown from "../utils/decorators/KeyDown";
-import Condition from "../utils/decorators/Condition";
-import Rectangle from "../math/Rectangle";
-import marioAtlas from "../assets/mario_atlas.json";
-import Trigger from "../utils/decorators/Trigger";
+import IRenderable from "../../graphics/IRenderable";
+import Direction from "../../utils/Direction";
+import Vector from "../../math/Vector";
+import GeneralAi from "../GeneralAI";
+import AtlasImage from "../../graphics/AtlasImage";
+import Animation from "../../graphics/Animation";
+import PixelType from "../../utils/PixelType";
+import KeyDown from "../../utils/decorators/KeyDown";
+import Condition from "../../utils/decorators/Condition";
+import Rectangle from "../../math/Rectangle";
+import marioAtlas from "../../assets/mario_atlas.json";
 
 export default class Mario extends GeneralAi implements IRenderable
 {
-	public constructor(spawnVector?: Vector)
+	public constructor(spawnPoint?: Vector)
 	{
-		super(spawnVector);
+		super(spawnPoint);
 
 		this.size = new Vector(18, 18);
 		this.atlas = new AtlasImage(this.game.imageFactory.getImage("mario"), marioAtlas);
@@ -74,18 +72,26 @@ export default class Mario extends GeneralAi implements IRenderable
 
 	@Condition({
 		property: ["isDead", true],
-		trigger: PixelType.DEATH
+		trigger: PixelType.DEATH,
+		checkControls: false
 	})
 	public kill()
 	{
-		console.log("dead");
-		// if (!this.isDead)
-		// {
-		this.isDead = true;
-		// 	this.velocity = Vector.copy(this.originalVelocity);
-		// 	super.kill();
-		// }
+		if (!this.isDead)
+		{
+			this.isDead = true;
+			this.canControl = false;
+			this.velocity = Vector.copy(this.originalVelocity);
+			super.kill();
+		}
+		this.atlas.setSprite("death");
 		this.velocity.y += this.gravity * this.game.deltaTime;
 		this.position.y += Math.round(this.velocity.y);
+		
+		if (this.position.y > this.game.level.size.y && !this.deathDone)
+		{
+			this.deathDone = true;
+			alert("You died !");
+		}
 	}
 }

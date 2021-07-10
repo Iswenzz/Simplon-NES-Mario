@@ -1,4 +1,4 @@
-import Mario from "./ai/Mario";
+import Mario from "./ai/characters/Mario";
 import Level from "./world/Level";
 import Canvas from "./sys/Canvas";
 import Controls from "./sys/Controls";
@@ -112,7 +112,8 @@ export default class Game
 		this.mario.frame();
 
 		// Triggers
-		Action.callback(this.mario.life < 0, this.gameOver.bind(this));
+		Action.callback(this.mario.health <= 0, this.level.respawn.bind(this.level));
+		Action.callback(this.mario.life <= 0, this.gameOver.bind(this));
 
 		this.stats.end();
 		window.requestAnimationFrame(this.mainLoop.bind(this));
