@@ -3,10 +3,14 @@ import Direction from "../utils/Direction";
 import Vector from "../math/Vector";
 import GeneralAi from "./GeneralAI";
 import AtlasImage from "../graphics/AtlasImage";
-import marioAtlas from "../assets/mario_atlas.json";
 import Animation from "../graphics/Animation";
 import Action from "../utils/Action";
 import PixelType from "../utils/PixelType";
+import KeyDown from "../utils/decorators/KeyDown";
+import Condition from "../utils/decorators/Condition";
+import Rectangle from "../math/Rectangle";
+import marioAtlas from "../assets/mario_atlas.json";
+import Trigger from "../utils/decorators/Trigger";
 
 export default class Mario extends GeneralAi implements IRenderable
 {
@@ -18,40 +22,70 @@ export default class Mario extends GeneralAi implements IRenderable
 		this.atlas = new AtlasImage(this.game.imageFactory.getImage("mario"), marioAtlas);
 		this.sprintAnimation = new Animation(this.atlas, "sprint", 3);
 
+		this.life = 3;
 		this.direction = Direction.RIGHT;
 		this.originalVelocity = new Vector(0, -4);
 		this.velocity = Vector.copy(this.originalVelocity);
 		this.gravity = 15;
 	}
 
+	@Condition({
+		keydown: "ArrowUp",
+		property: ["isJumping", true],
+	})
+	public jump()
+	{
+		const predictedMove = Rectangle.copy(this.rectangle);
+		predictedMove.y += Math.abs(Math.round(this.velocity.y + (this.gravity * this.game.deltaTime)));
+
+		if (this.isJumping && this.game.level.intersect(predictedMove, PixelType.COLLISION))
+		{
+			this.velocity = Vector.copy(this.originalVelocity);
+			this.isJumping = false;
+			this.atlas.setSprite("idle");
+			return;
+		}
+
+		this.atlas.setSprite("jump");
+		this.isJumping = true;
+		this.velocity.y += this.gravity * this.game.deltaTime;
+		this.position.y += Math.round(this.velocity.y);
+	}
+
 	public sprint()
 	{
 		this.isSprinting = this.game.controls.keysDown["Shift"];
-		this.speed = this.isSprinting ? 220 : 150;
+		this.speed = this.isSprinting ? this.sprintSpeed : this.walkSpeed;
 	}
 
-	public frame()
+	@KeyDown("ArrowRight")
+	public moveRight()
 	{
-		// Controls
-		Action.callback(this.game.controls.keysDown["Shift"], this.sprint.bind(this), this.sprint.bind(this));
-		if (!Action.callback(this.game.controls.keysDown["ArrowRight"], this.moveRight.bind(this)) &&
-			!Action.callback(this.game.controls.keysDown["ArrowLeft"], this.moveLeft.bind(this)))
-			this.idle();
-		Action.callback(this.isJumping || this.game.controls.keysDown["ArrowUp"], 
-			this.jump.bind(this), this.fall.bind(this));
+		this.direction = Direction.RIGHT;
+		super.moveRight();
+	}
 
-		// Triggers
-		Action.callback(this.game.level.intersect(this.rectangle, PixelType.DEATH), this.kill.bind(this));
-		Action.callback(this.game.level.intersect(this.rectangle, PixelType.FLAG), () => console.log("flag"));
+	@KeyDown("ArrowLeft")
+	public moveLeft()
+	{
+		this.direction = Direction.LEFT;
+		super.moveLeft();
+	}
 
-		// Render image
-		if (this.atlas.currentAtlas.loaded)
-		{
-			if (this.direction === Direction.LEFT)
-				this.game.canvas.renderLeft(this.atlas.currentAtlas.bitmap, this.position, this.size);
-			else
-				this.game.canvas.renderRight(this.atlas.currentAtlas.bitmap, this.position, this.size);
-		}
-		this.rectangle.setRect(this.position.x, this.position.y, this.size.x, this.size.y);
+	@Condition({
+		property: ["isDead", true],
+		trigger: PixelType.DEATH
+	})
+	public kill()
+	{
+		console.log("dead");
+		// if (!this.isDead)
+		// {
+		this.isDead = true;
+		// 	this.velocity = Vector.copy(this.originalVelocity);
+		// 	super.kill();
+		// }
+		this.velocity.y += this.gravity * this.game.deltaTime;
+		this.position.y += Math.round(this.velocity.y);
 	}
 }

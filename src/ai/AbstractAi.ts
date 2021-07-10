@@ -17,8 +17,9 @@ export default abstract class AbstractAi implements IRenderable
 
 	public health: number;
 	public maxHealth: number;
-	public receiveDamage: boolean;
-	public canDamage: boolean;
+	public receiveDamage = true;
+	public canDamage = true;
+	public isDead = false;
 
 	protected constructor(spawnVector?: Vector)
 	{

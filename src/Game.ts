@@ -1,15 +1,16 @@
 import Mario from "./ai/Mario";
 import Level from "./world/Level";
-import Vector from "./math/Vector";
 import Canvas from "./sys/Canvas";
 import Controls from "./sys/Controls";
 import ImageFactory from "./graphics/ImageFactory";
 import * as Stats from "stats.js";
 
+// @todo - Dynamic assets loading
 import lvl1 from "./assets/1-1.jpg";
 import lvl1_col from "./assets/1-1_col.png";
 import mario from "./assets/mario_atlas.png";
 import L1_1 from "./world/level/1-1";
+import Action from "./utils/Action";
 
 export default class Game
 {
@@ -40,6 +41,9 @@ export default class Game
 		this.profile();
 	}
 
+	/**
+	 * Initialize the canvas profiler with stats.js
+	 */
 	public profile()
 	{
 		this.stats = new Stats();
@@ -47,6 +51,9 @@ export default class Game
 		document.body.appendChild(this.stats.dom);
 	}
 
+	/**
+	 * Load all assets before starting the game.
+	 */
 	public load()
 	{
 		const loadImages = setInterval(() => 
@@ -63,7 +70,6 @@ export default class Game
 	 * Initialize the game.
 	 * @todo - Game configuration
 	 * @todo - Game save
-	 * @todo - Dynamic assets loading
 	 */
 	public initialize()
 	{
@@ -77,13 +83,18 @@ export default class Game
 		window.requestAnimationFrame(this.mainLoop.bind(this));
 	}
 
+	public gameOver()
+	{
+		console.log("game over");
+	}
+
 	public static getInstance()
 	{
 		if (!Game.instance)
 			Game.instance = new Game();
 		return Game.instance;
 	}
-	
+
 	private mainLoop(currentTime: number)
 	{
 		this.stats.begin();
@@ -99,6 +110,9 @@ export default class Game
 		// Game
 		this.level.frame();
 		this.mario.frame();
+
+		// Triggers
+		Action.callback(this.mario.life < 0, this.gameOver.bind(this));
 
 		this.stats.end();
 		window.requestAnimationFrame(this.mainLoop.bind(this));

@@ -2,13 +2,14 @@ import Animation from "../graphics/Animation";
 import IRenderable from "../graphics/IRenderable";
 import Rectangle from "../math/Rectangle";
 import Vector from "../math/Vector";
-import Action from "../utils/Action";
+import Condition from "../utils/decorators/Condition";
 import Direction from "../utils/Direction";
 import PixelType from "../utils/PixelType";
 import AbstractAi from "./AbstractAi";
 
 export default class GeneralAi extends AbstractAi implements IRenderable
 {
+	public life: number;
 	public direction: Direction;
 	public originalVelocity: Vector;
 	public velocity: Vector;
@@ -19,20 +20,25 @@ export default class GeneralAi extends AbstractAi implements IRenderable
 
 	public sprintAnimation: Animation;
 
-	public isJumping: boolean;
-	public isFalling: boolean;
-	public isSprinting: boolean;
+	public isJumping = false;
+	public isFalling = false;
+	public isSprinting = false;
 
 	public constructor(spawnVector?: Vector)
 	{
 		super(spawnVector);
 
+		this.life = 1;
 		this.direction = Direction.LEFT;
 		this.originalVelocity = new Vector(0, 0);
 		this.velocity = Vector.copy(this.originalVelocity);
 		this.gravity = 15;
+		this.speed = this.isSprinting ? this.sprintSpeed : this.walkSpeed;
 	}
 
+	@Condition({
+		property: ["isJumping", false]
+	})
 	public fall()
 	{
 		const predictedMove = Rectangle.copy(this.rectangle);
@@ -47,7 +53,7 @@ export default class GeneralAi extends AbstractAi implements IRenderable
 
 			this.isFalling = true;
 			this.velocity.y += this.gravity * this.game.deltaTime;
-			this.position.y += this.velocity.y;
+			this.position.y += Math.round(this.velocity.y);
 		}
 		else
 		{
@@ -56,6 +62,9 @@ export default class GeneralAi extends AbstractAi implements IRenderable
 		}
 	}
 
+	@Condition({ 
+		property: ["isJumping", true]
+	})
 	public jump()
 	{
 		const predictedMove = Rectangle.copy(this.rectangle);
@@ -72,7 +81,17 @@ export default class GeneralAi extends AbstractAi implements IRenderable
 		this.atlas.setSprite("jump");
 		this.isJumping = true;
 		this.velocity.y += this.gravity * this.game.deltaTime;
-		this.position.y += this.velocity.y;
+		this.position.y += Math.round(this.velocity.y);
+	}
+
+	public idle()
+	{
+		this.atlas.setSprite("idle");
+	}
+
+	public sprint()
+	{
+		this.speed = this.isSprinting ? this.sprintSpeed : this.walkSpeed;
 	}
 
 	public run()
@@ -81,17 +100,9 @@ export default class GeneralAi extends AbstractAi implements IRenderable
 		this.sprintAnimation.frame();
 	}
 
-	public kill() 
-	{
-		this.health = 0;
-		this.atlas.setSprite("death");
-	}
-
-	public damage(value: number) 
-	{ 
-		this.health -= value;
-	}
-
+	@Condition({ 
+		property: ["direction", Direction.LEFT]
+	})
 	public moveLeft()
 	{	
 		const value = Math.round(this.speed * this.game.deltaTime);
@@ -108,6 +119,9 @@ export default class GeneralAi extends AbstractAi implements IRenderable
 		this.run();
 	}
 
+	@Condition({ 
+		property: ["direction", Direction.RIGHT]
+	})
 	public moveRight()
 	{
 		const value = Math.round(this.speed * this.game.deltaTime);
@@ -124,24 +138,35 @@ export default class GeneralAi extends AbstractAi implements IRenderable
 		this.run();
 	}
 
-	public idle()
+	@Condition({
+		property: ["isDead", true]
+	})
+	public kill() 
 	{
-		this.atlas.setSprite("idle");
+		this.life--;
+		this.isDead = true;
+		this.canDamage = false;
+		this.receiveDamage = false;
+		this.health = 0;
+		this.atlas.setSprite("death");
 	}
 
-	public sprint()
-	{
-		this.speed = this.isSprinting ? this.sprintSpeed : this.walkSpeed;
+	public damage(value: number) 
+	{ 
+		if (this.receiveDamage)
+			this.health -= value;
 	}
 
 	public frame()
 	{
-		// Controls
-		Action.callback(this.isSprinting, this.sprint.bind(this), this.sprint.bind(this));
-		if (!Action.callback(this.direction === Direction.RIGHT, this.moveRight.bind(this)) &&
-			!Action.callback(this.direction === Direction.LEFT, this.moveLeft.bind(this)))
-			this.idle();
-		Action.callback(this.isJumping, this.jump.bind(this), this.fall.bind(this));
+		// Events
+		this.idle();
+		this.sprint();
+		this.jump();
+		this.fall();
+		this.moveLeft();
+		this.moveRight();
+		this.kill();
 
 		// Render image
 		if (this.atlas.currentAtlas.loaded)
