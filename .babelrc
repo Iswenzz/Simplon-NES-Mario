@@ -4,11 +4,16 @@
 	  	["@babel/preset-typescript", { "allExtensions": true }]
 	],
 	"plugins": [
+		"@babel/plugin-syntax-dynamic-import",
+		["@babel/plugin-proposal-decorators", {
+			"legacy": true
+		}],
+		["@babel/proposal-class-properties", {
+			"loose": false
+		}],
+		"@babel/proposal-object-rest-spread",
 		["@babel/plugin-transform-runtime", {
 			"regenerator": true
-		}],
-		"@babel/plugin-syntax-dynamic-import",
-		"@babel/proposal-class-properties",
-		"@babel/proposal-object-rest-spread"
+		}]
 	]
 }
