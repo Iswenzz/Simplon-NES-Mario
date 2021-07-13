@@ -7,7 +7,7 @@ import PixelType from "utils/PixelType";
 import KeyDown from "utils/decorators/KeyDown";
 import Condition from "utils/decorators/Condition";
 import Rectangle from "math/Rectangle";
-import marioAtlas from "assets/mario_atlas.json";
+import marioAtlas from "assets/ai/characters/mario/mario_atlas.json";
 import GeneralAi from "ai/GeneralAi";
 
 export default class Mario extends GeneralAi implements IRenderable
@@ -17,7 +17,8 @@ export default class Mario extends GeneralAi implements IRenderable
 		super(spawnPoint);
 
 		this.size = new Vector(18, 18);
-		this.atlas = new AtlasImage(this.game.imageFactory.getImage("mario"), marioAtlas);
+		this.atlas = new AtlasImage(this.game.imageFactory.getImage("mario"), 
+			marioAtlas as Record<string, any>);
 		this.atlas.setSprite("idle");
 		this.sprintAnimation = new Animation(this.atlas, "sprint", 3);
 

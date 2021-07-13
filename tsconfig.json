@@ -6,6 +6,11 @@
 		"module": "esnext",
 		"target": "es5",
 		"allowJs": true,
-		"baseUrl": "./src"
+		"baseUrl": "./src",
+		"resolveJsonModule": true,
+		"allowSyntheticDefaultImports": true,
+		"paths": {
+			"assets/*": ["../assets/*"]
+		}
 	}
 }

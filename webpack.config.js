@@ -16,7 +16,10 @@ module.exports = (_, argv) =>
 			path: path.resolve(__dirname, "dist"),
 		},
 		resolve: {
-			modules: [path.resolve(__dirname, "src"), "node_modules"],
+			modules: ["src", "node_modules"],
+			alias: {
+				assets: path.resolve(__dirname, "assets")
+			},
 			extensions: [ ".tsx", ".jsx", ".ts", ".js" ],
 		},
 		devServer: {

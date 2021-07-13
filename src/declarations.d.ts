@@ -1,7 +1,2 @@
-declare module "*.json"
-{
-	const json: Record<string, any>;
-	export default json;
-}
-
-declare module "*"
+declare module "*.jpg";
+declare module "*.png";
