@@ -22,7 +22,7 @@ export default class Level implements IRenderable
 	public constructor(texture: Texture, colmap: Texture, topLeftVector?: Vector)
 	{
 		this.game = Game.getInstance();
-		this.bitmap = texture.bitmap;
+		this.bitmap = texture.data;
 		this.colmap = new ImageBuffer(colmap);
 
 		this.originalPosition = Vector.copy(topLeftVector);
@@ -32,7 +32,7 @@ export default class Level implements IRenderable
 
 	public respawn()
 	{
-		this.game.mario.position = Vector.copy(this.originalPosition);
+		this.game.soundSystem.stopSound("super_mario_bros");
 	}
 
 	public intersect(rectangle: Rectangle, type: PixelType, 

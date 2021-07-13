@@ -9,10 +9,10 @@ export default class L1_1 extends Level
 
 	public constructor()
 	{
-		const { imageFactory } = Game.getInstance();
+		const { assetFactory } = Game.getInstance();
 
-		super(imageFactory.getImage("1-1"), imageFactory.getImage("1-1_col"));
-		this.spawnPoint = new Vector(200, 180);
+		super(assetFactory.getImage("1-1"), assetFactory.getImage("1-1_col"));
+		this.spawnPoint = new Vector(200, 188);
 		this.endFlag = new EndFlag();
 	}
 }

@@ -19,6 +19,11 @@ export default class EndFlag extends EntityAi
 	})
 	public trigger()
 	{
+		if (!this.isTriggered)
+		{
+			this.game.soundSystem.stopSound("super_mario_bros");
+			this.game.soundSystem.playSound("flag");
+		}
 		this.isTriggered = true;
 
 		// Go at the bottom of the flag
@@ -34,7 +39,10 @@ export default class EndFlag extends EntityAi
 			if (this.game.level.intersect(predictedMove, PixelType.FLAG))
 				this.game.mario.position.y++;
 			else
+			{
 				this.bottomFlag = true;
+				this.game.soundSystem.playSound("stage_clear");
+			}
 		}
 		// Walk to the end
 		else if (this.bottomFlag && !this.done)

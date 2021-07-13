@@ -1,13 +1,3 @@
-export default class Texture
-{
-	public name: string;
-	public bitmap: HTMLImageElement;
-	public loaded: boolean;
+import Asset from "sys/Asset";
 
-	public constructor(name: string, bitmap: HTMLImageElement, loaded: boolean)
-	{
-		this.name = name;
-		this.bitmap = bitmap;
-		this.loaded = loaded;
-	}
-}
+export default class Texture extends Asset<HTMLImageElement> { }

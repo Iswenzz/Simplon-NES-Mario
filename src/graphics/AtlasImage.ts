@@ -12,7 +12,7 @@ export default class AtlasImage
 
 	public constructor(texture: Texture, json?: Record<string, Rectangle>)
 	{
-		this.bitmap = texture.bitmap;
+		this.bitmap = texture.data;
 		this.json = json;
 		this.registerSpriteFromConfig(this.json);
 		this.currentAtlas = new Texture(null, null, false);

@@ -4,7 +4,8 @@ import Mario from "ai/characters/Mario";
 import Level from "world/Level";
 import Canvas from "sys/Canvas";
 import Controls from "sys/Controls";
-import ImageFactory from "graphics/ImageFactory";
+import SoundSystem from "sys/SoundSystem";
+import AssetFactory from "sys/AssetFactory";
 import Action from "utils/Action";
 
 // @todo - Dynamic assets loading
@@ -12,6 +13,13 @@ import L1_1 from "world/level/1-1";
 import lvl1 from "assets/world/1-1/1-1.jpg";
 import lvl1_col from "assets/world/1-1/1-1_col.png";
 import mario from "assets/ai/characters/mario/mario_atlas.png";
+import super_mario_bros from "assets/music/super_mario_bros.mp3";
+import mario_die from "assets/ai/characters/mario/smb_mariodie.wav";
+import mario_jump from "assets/ai/characters/mario/smb_jump-small.wav";
+import bump from "assets/ai/characters/mario/smb_bump.wav";
+import flag from "assets/ai/entities/flag/smb_flagpole.wav";
+import game_over from "assets/game/smb_gameover.wav";
+import stage_clear from "assets/game/smb_stage_clear.wav";
 
 export default class Game
 {
@@ -20,7 +28,8 @@ export default class Game
 
 	public canvas: Canvas;
 	public controls: Controls;
-	public imageFactory: ImageFactory;
+	public assetFactory: AssetFactory;
+	public soundSystem: SoundSystem;
 
 	public level: Level;
 	public mario: Mario;
@@ -34,10 +43,19 @@ export default class Game
 
 	private constructor() 
 	{
-		this.imageFactory = new ImageFactory();
-		this.imageFactory.registerImage("1-1", lvl1);
-		this.imageFactory.registerImage("1-1_col", lvl1_col);
-		this.imageFactory.registerImage("mario", mario);
+		this.assetFactory = new AssetFactory();
+		this.assetFactory.registerImage("1-1", lvl1);
+		this.assetFactory.registerImage("1-1_col", lvl1_col);
+		this.assetFactory.registerImage("mario", mario);
+
+		this.soundSystem = new SoundSystem(this.assetFactory);
+		this.soundSystem.registerSound("super_mario_bros", super_mario_bros);
+		this.soundSystem.registerSound("mario_die", mario_die);
+		this.soundSystem.registerSound("mario_jump", mario_jump);
+		this.soundSystem.registerSound("bump", bump);
+		this.soundSystem.registerSound("flag", flag);
+		this.soundSystem.registerSound("game_over", game_over);
+		this.soundSystem.registerSound("stage_clear", stage_clear);
 
 		this.load();
 		this.profile();
@@ -60,7 +78,7 @@ export default class Game
 	{
 		const loadImages = setInterval(() => 
 		{
-			if (this.imageFactory.isAllLoaded())
+			if (this.assetFactory.isAllLoaded())
 			{
 				this.initialize();
 				clearInterval(loadImages);
@@ -83,12 +101,15 @@ export default class Game
 		this.level = new L1_1();
 		this.mario = new Mario(this.level.spawnPoint);
 
+		this.soundSystem.playSound("super_mario_bros");
+
 		window.requestAnimationFrame(this.mainLoop.bind(this));
 	}
 
 	public gameOver()
 	{
-		console.log("game over");
+		this.soundSystem.stopSound("super_mario_bros");
+		this.soundSystem.playSound("game_over");
 	}
 
 	public static getInstance()

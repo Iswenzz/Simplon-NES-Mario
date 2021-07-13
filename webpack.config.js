@@ -68,7 +68,7 @@ module.exports = (_, argv) =>
 					loader: "eslint-loader"
 				},
 				{	// file loader
-					test: /\.(png|jpe?g|gif|svg|webp)$/i,
+					test: /\.(png|jpe?g|gif|svg|webp|mp3|wav)$/i,
 					loader: "file-loader"
 				},
 				{	// font loader

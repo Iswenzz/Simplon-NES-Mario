@@ -15,7 +15,7 @@ export default class ImageBuffer
 
 	public constructor(texture: Texture)
 	{
-		this.bitmap = texture.bitmap;
+		this.bitmap = texture.data;
 		this.buffer = this.getImageBuffer(texture);
 	}
 
@@ -33,12 +33,12 @@ export default class ImageBuffer
 	public getImageBuffer(texture: Texture): ImageData
 	{
 		const canvas = document.createElement("canvas");
-		canvas.width = texture.bitmap.width;
-		canvas.height = texture.bitmap.height;
+		canvas.width = texture.data.width;
+		canvas.height = texture.data.height;
 
 		const ctx = canvas.getContext("2d");
-		ctx.drawImage(texture.bitmap, 0, 0, 
-			texture.bitmap.width, texture.bitmap.height);
+		ctx.drawImage(texture.data, 0, 0, 
+			texture.data.width, texture.data.height);
 
 		return ctx.getImageData(0, 0, canvas.width, canvas.height);
 	}

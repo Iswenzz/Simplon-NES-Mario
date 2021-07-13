@@ -7,8 +7,9 @@ import PixelType from "utils/PixelType";
 import KeyDown from "utils/decorators/KeyDown";
 import Condition from "utils/decorators/Condition";
 import Rectangle from "math/Rectangle";
-import marioAtlas from "assets/ai/characters/mario/mario_atlas.json";
 import GeneralAi from "ai/GeneralAi";
+
+import marioAtlas from "assets/ai/characters/mario/mario_atlas.json";
 
 export default class Mario extends GeneralAi implements IRenderable
 {
@@ -17,7 +18,7 @@ export default class Mario extends GeneralAi implements IRenderable
 		super(spawnPoint);
 
 		this.size = new Vector(18, 18);
-		this.atlas = new AtlasImage(this.game.imageFactory.getImage("mario"), 
+		this.atlas = new AtlasImage(this.game.assetFactory.getImage("mario"), 
 			marioAtlas as Record<string, any>);
 		this.atlas.setSprite("idle");
 		this.sprintAnimation = new Animation(this.atlas, "sprint", 3);
@@ -40,11 +41,16 @@ export default class Mario extends GeneralAi implements IRenderable
 
 		if (this.isJumping && this.game.level.intersect(predictedMove, PixelType.COLLISION))
 		{
+			if (this.game.level.intersect(predictedMove, PixelType.COLLISION, ["topLeft", "topRight"]))
+				this.game.soundSystem.playSound("bump");
+			
 			this.velocity = Vector.copy(this.originalVelocity);
 			this.isJumping = false;
 			this.idle();
 			return;
 		}
+		else if (!this.isJumping)
+			this.game.soundSystem.playSound("mario_jump");
 
 		this.atlas.setSprite("jump");
 		this.isJumping = true;
@@ -81,10 +87,14 @@ export default class Mario extends GeneralAi implements IRenderable
 	{
 		if (!this.isDead)
 		{
+			this.game.soundSystem.playSound("mario_die");
+			this.life--;
 			this.isDead = true;
 			this.canControl = false;
 			this.velocity = Vector.copy(this.originalVelocity);
-			super.kill();
+			this.canDamage = false;
+			this.receiveDamage = false;
+			this.health = 0;
 		}
 		this.atlas.setSprite("death");
 		this.velocity.y += this.gravity * this.game.deltaTime;
