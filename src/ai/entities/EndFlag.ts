@@ -1,7 +1,7 @@
-import Rectangle from "../../math/Rectangle";
-import Condition from "../../utils/decorators/Condition";
-import PixelType from "../../utils/PixelType";
-import EntityAi from "../EntityAi";
+import Rectangle from "math/Rectangle";
+import Condition from "utils/decorators/Condition";
+import PixelType from "utils/PixelType";
+import EntityAi from "ai/EntityAi";
 
 export default class EndFlag extends EntityAi
 {

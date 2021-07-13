@@ -1,10 +1,10 @@
-import Animation from "../graphics/Animation";
-import IRenderable from "../graphics/IRenderable";
-import Rectangle from "../math/Rectangle";
-import Vector from "../math/Vector";
-import Condition from "../utils/decorators/Condition";
-import Direction from "../utils/Direction";
-import PixelType from "../utils/PixelType";
+import Animation from "graphics/Animation";
+import IRenderable from "graphics/IRenderable";
+import Rectangle from "math/Rectangle";
+import Vector from "math/Vector";
+import Condition from "utils/decorators/Condition";
+import Direction from "utils/Direction";
+import PixelType from "utils/PixelType";
 import AbstractAi from "./AbstractAi";
 
 export default class GeneralAi extends AbstractAi implements IRenderable

@@ -1,14 +1,14 @@
-import IRenderable from "../../graphics/IRenderable";
-import Direction from "../../utils/Direction";
-import Vector from "../../math/Vector";
-import GeneralAi from "../GeneralAi";
-import AtlasImage from "../../graphics/AtlasImage";
-import Animation from "../../graphics/Animation";
-import PixelType from "../../utils/PixelType";
-import KeyDown from "../../utils/decorators/KeyDown";
-import Condition from "../../utils/decorators/Condition";
-import Rectangle from "../../math/Rectangle";
-import marioAtlas from "../../assets/mario_atlas.json";
+import IRenderable from "graphics/IRenderable";
+import Direction from "utils/Direction";
+import Vector from "math/Vector";
+import AtlasImage from "graphics/AtlasImage";
+import Animation from "graphics/Animation";
+import PixelType from "utils/PixelType";
+import KeyDown from "utils/decorators/KeyDown";
+import Condition from "utils/decorators/Condition";
+import Rectangle from "math/Rectangle";
+import marioAtlas from "assets/mario_atlas.json";
+import GeneralAi from "ai/GeneralAi";
 
 export default class Mario extends GeneralAi implements IRenderable
 {

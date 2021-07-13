@@ -1,4 +1,4 @@
-import Vector from "../math/Vector";
+import Vector from "math/Vector";
 import Camera from "./Camera";
 
 export default class Canvas

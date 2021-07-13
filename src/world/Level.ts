@@ -1,11 +1,10 @@
-import Canvas from "../sys/Canvas";
-import IRenderable from "../graphics/IRenderable";
-import Game from "../Game";
-import Vector from "../math/Vector";
-import Texture from "../graphics/Texture";
-import ImageBuffer from "../graphics/ImageBuffer";
-import Rectangle, { Corners } from "../math/Rectangle";
-import PixelType from "../utils/PixelType";
+import Game from "Game";
+import IRenderable from "graphics/IRenderable";
+import Vector from "math/Vector";
+import Texture from "graphics/Texture";
+import ImageBuffer from "graphics/ImageBuffer";
+import Rectangle, { Corners } from "math/Rectangle";
+import PixelType from "utils/PixelType";
 
 export default class Level implements IRenderable
 {

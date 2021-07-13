@@ -5,6 +5,7 @@
 		"outDir": "./dist/",
 		"module": "esnext",
 		"target": "es5",
-		"allowJs": true
+		"allowJs": true,
+		"baseUrl": "./src"
 	}
 }

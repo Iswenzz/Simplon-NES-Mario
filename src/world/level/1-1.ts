@@ -1,7 +1,7 @@
-import EndFlag from "../../ai/entities/EndFlag";
-import Game from "../../Game";
-import Vector from "../../math/Vector";
-import Level from "../Level";
+import Game from "Game";
+import EndFlag from "ai/entities/EndFlag";
+import Vector from "math/Vector";
+import Level from "world/Level";
 
 export default class L1_1 extends Level 
 {

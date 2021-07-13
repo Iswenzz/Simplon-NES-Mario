@@ -1,5 +1,5 @@
-import Game from "../../Game";
-import PixelType from "../PixelType";
+import Game from "Game";
+import PixelType from "utils/PixelType";
 
 export type ConditionComposition<T> = Partial<{
 	property: [string, T]

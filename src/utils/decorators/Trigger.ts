@@ -1,6 +1,6 @@
-import GeneralAi from "../../ai/GeneralAI";
-import Game from "../../Game";
-import PixelType from "../PixelType";
+import Game from "Game";
+import GeneralAi from "ai/GeneralAI";
+import PixelType from "utils/PixelType";
 
 const Trigger = (pixelType: PixelType) => 
 {

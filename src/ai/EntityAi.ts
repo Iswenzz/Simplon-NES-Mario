@@ -1,5 +1,5 @@
-import Vector from "../math/Vector";
-import Condition from "../utils/decorators/Condition";
+import Vector from "math/Vector";
+import Condition from "utils/decorators/Condition";
 import AbstractAi from "./AbstractAi";
 
 export default class EntityAi extends AbstractAi

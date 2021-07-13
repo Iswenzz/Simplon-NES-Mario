@@ -1,5 +1,5 @@
-import Game from "../Game";
-import IRenderable from "../graphics/IRenderable";
+import Game from "Game";
+import IRenderable from "graphics/IRenderable";
 import AtlasImage from "./AtlasImage";
 
 export default class Animation implements IRenderable

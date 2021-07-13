@@ -1,4 +1,4 @@
-import Vector from "../math/Vector";
+import Vector from "math/Vector";
 import Texture from "./Texture";
 
 export type Color = {

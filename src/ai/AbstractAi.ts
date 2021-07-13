@@ -1,8 +1,8 @@
-import Game from "../Game";
-import AtlasImage from "../graphics/AtlasImage";
-import IRenderable from "../graphics/IRenderable";
-import Rectangle from "../math/Rectangle";
-import Vector from "../math/Vector";
+import Game from "Game";
+import AtlasImage from "graphics/AtlasImage";
+import IRenderable from "graphics/IRenderable";
+import Rectangle from "math/Rectangle";
+import Vector from "math/Vector";
 
 export default abstract class AbstractAi implements IRenderable
 {

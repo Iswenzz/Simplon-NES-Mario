@@ -1,16 +1,16 @@
-import Mario from "./ai/characters/Mario";
-import Level from "./world/Level";
-import Canvas from "./sys/Canvas";
-import Controls from "./sys/Controls";
-import ImageFactory from "./graphics/ImageFactory";
 import * as Stats from "stats.js";
+import Mario from "ai/characters/Mario";
+import Level from "world/Level";
+import Canvas from "sys/Canvas";
+import Controls from "sys/Controls";
+import ImageFactory from "graphics/ImageFactory";
+import Action from "utils/Action";
 
 // @todo - Dynamic assets loading
-import lvl1 from "./assets/1-1.jpg";
-import lvl1_col from "./assets/1-1_col.png";
-import mario from "./assets/mario_atlas.png";
-import L1_1 from "./world/level/1-1";
-import Action from "./utils/Action";
+import L1_1 from "world/level/1-1";
+import lvl1 from "assets/1-1.jpg";
+import lvl1_col from "assets/1-1_col.png";
+import mario from "assets/mario_atlas.png";
 
 export default class Game
 {

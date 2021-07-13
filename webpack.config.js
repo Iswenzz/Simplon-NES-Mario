@@ -16,6 +16,7 @@ module.exports = (_, argv) =>
 			path: path.resolve(__dirname, "dist"),
 		},
 		resolve: {
+			modules: [path.resolve(__dirname, "src"), "node_modules"],
 			extensions: [ ".tsx", ".jsx", ".ts", ".js" ],
 		},
 		devServer: {

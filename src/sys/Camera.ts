@@ -1,7 +1,7 @@
-import Matrix3x2 from "../math/Matrix3x2";
+import Game from "Game";
+import Matrix3x2 from "math/Matrix3x2";
+import Vector from "math/Vector";
 import Canvas from "./Canvas";
-import Game from "../Game";
-import Vector from "../math/Vector";
 
 export default class Camera
 {

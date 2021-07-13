@@ -1,4 +1,4 @@
-import Rectangle from "../math/Rectangle";
+import Rectangle from "math/Rectangle";
 import Texture from "./Texture";
 
 export default class AtlasImage
