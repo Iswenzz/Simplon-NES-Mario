@@ -104,7 +104,8 @@ export default class Game
 		this.canvas.clear();
 
 		// Clock
-		this.deltaTime = (currentTime - this.previousTime) / 1000;
+		const delta = (currentTime - this.previousTime) / 1000;
+		this.deltaTime = delta > 0.03 ? 0.03 : delta;
 		this.fps = Math.round(1 / this.deltaTime);
 		this.time += Math.round(this.deltaTime * 1000);
 		this.previousTime = currentTime;
