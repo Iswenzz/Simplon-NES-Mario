@@ -8,6 +8,7 @@ export default class AtlasImage
 	public loaded: boolean;
 	public json: Record<string, Rectangle>;
 	public currentAtlas: Texture;
+	public lockSprite: boolean;
 
 	public constructor(texture: Texture, json?: Record<string, Rectangle>)
 	{
@@ -48,8 +49,19 @@ export default class AtlasImage
 		return this.sprites[name];
 	}
 
-	public setSprite(name: string)
+	public setSprite(name: string, force?: boolean)
 	{
-		this.currentAtlas = this.sprites[name];
+		if (!this.lockSprite || force)
+			this.currentAtlas = this.sprites[name];
+	}
+
+	public lock()
+	{
+		this.lockSprite = true;
+	}
+
+	public unlock()
+	{
+		this.lockSprite = false;
 	}
 }

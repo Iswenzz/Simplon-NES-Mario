@@ -15,10 +15,4 @@ export default class L1_1 extends Level
 		this.spawnPoint = new Vector(200, 180);
 		this.endFlag = new EndFlag();
 	}
-
-	public frame()
-	{
-		this.endFlag.frame();
-		super.frame();
-	}
 }

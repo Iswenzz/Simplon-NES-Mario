@@ -20,13 +20,17 @@ export default class EndFlag extends EntityAi
 	public trigger()
 	{
 		this.isTriggered = true;
-		this.game.mario.canControl = false;
-		const predictedMove = Rectangle.copy(this.game.mario.rectangle);
 
 		// Go at the bottom of the flag
 		if (!this.bottomFlag)
 		{
+			this.game.mario.canControl = false;
+			this.game.mario.atlas.lock();
+			this.game.mario.atlas.setSprite("flag", true);
+			
+			const predictedMove = Rectangle.copy(this.game.mario.rectangle);
 			predictedMove.y += 1 + predictedMove.height;
+
 			if (this.game.level.intersect(predictedMove, PixelType.FLAG))
 				this.game.mario.position.y++;
 			else
@@ -35,6 +39,7 @@ export default class EndFlag extends EntityAi
 		// Walk to the end
 		else if (this.bottomFlag && !this.done)
 		{
+			this.game.mario.atlas.unlock();
 			this.game.mario.moveRight();
 			this.done = true;
 			alert("You finished the level!");
