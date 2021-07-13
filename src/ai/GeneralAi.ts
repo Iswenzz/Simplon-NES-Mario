@@ -15,8 +15,8 @@ export default class GeneralAi extends AbstractAi implements IRenderable
 	public velocity: Vector;
 	public gravity: number;
 	public speed: number;
-	public sprintSpeed = 220;
-	public walkSpeed = 150;
+	public sprintSpeed = 200;
+	public walkSpeed = 130;
 
 	public sprintAnimation: Animation;
 
@@ -31,9 +31,9 @@ export default class GeneralAi extends AbstractAi implements IRenderable
 
 		this.life = 1;
 		this.direction = Direction.LEFT;
-		this.originalVelocity = new Vector(0, 0);
+		this.originalVelocity = new Vector(0, -440);
 		this.velocity = Vector.copy(this.originalVelocity);
-		this.gravity = 15;
+		this.gravity = 1400;
 		this.speed = this.isSprinting ? this.sprintSpeed : this.walkSpeed;
 	}
 
@@ -43,7 +43,7 @@ export default class GeneralAi extends AbstractAi implements IRenderable
 	public fall()
 	{
 		const predictedMove = Rectangle.copy(this.rectangle);
-		const value = Math.abs(Math.round(this.velocity.y + (this.gravity * this.game.deltaTime)));
+		const value = Math.abs((this.velocity.y + this.gravity * this.game.deltaTime) * this.game.deltaTime);
 		predictedMove.y += value;
 
 		if (!this.game.level.intersect(predictedMove, PixelType.COLLISION, 
@@ -54,7 +54,7 @@ export default class GeneralAi extends AbstractAi implements IRenderable
 
 			this.isFalling = true;
 			this.velocity.y += this.gravity * this.game.deltaTime;
-			this.position.y += Math.round(this.velocity.y);
+			this.position.y += this.velocity.y * this.game.deltaTime;
 		}
 		else
 		{
@@ -97,7 +97,7 @@ export default class GeneralAi extends AbstractAi implements IRenderable
 
 	public run()
 	{
-		this.sprintAnimation.setInterval(this.isSprinting ? 10 : 20);
+		this.sprintAnimation.setInterval(this.isSprinting ? 15 : 25);
 		this.sprintAnimation.frame();
 	}
 
@@ -106,7 +106,7 @@ export default class GeneralAi extends AbstractAi implements IRenderable
 	})
 	public moveLeft()
 	{	
-		const value = Math.round(this.speed * this.game.deltaTime);
+		const value = this.speed * this.game.deltaTime;
 		this.direction = Direction.LEFT;
 		const predictedMove = Rectangle.copy(this.rectangle);
 		predictedMove.x -= value;
@@ -125,7 +125,7 @@ export default class GeneralAi extends AbstractAi implements IRenderable
 	})
 	public moveRight()
 	{
-		const value = Math.round(this.speed * this.game.deltaTime);
+		const value = this.speed * this.game.deltaTime;
 		this.direction = Direction.RIGHT;
 		const predictedMove = Rectangle.copy(this.rectangle);
 		predictedMove.x += value;

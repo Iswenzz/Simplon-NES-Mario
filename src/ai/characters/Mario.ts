@@ -22,9 +22,9 @@ export default class Mario extends GeneralAi implements IRenderable
 
 		this.life = 3;
 		this.direction = Direction.RIGHT;
-		this.originalVelocity = new Vector(0, -4);
+		this.originalVelocity = new Vector(0, -440);
 		this.velocity = Vector.copy(this.originalVelocity);
-		this.gravity = 15;
+		this.gravity = 1400;
 	}
 
 	@Condition({
@@ -34,7 +34,7 @@ export default class Mario extends GeneralAi implements IRenderable
 	public jump()
 	{
 		const predictedMove = Rectangle.copy(this.rectangle);
-		predictedMove.y += Math.abs(Math.round(this.velocity.y + (this.gravity * this.game.deltaTime)));
+		predictedMove.y += (this.velocity.y + this.gravity * this.game.deltaTime) * this.game.deltaTime;
 
 		if (this.isJumping && this.game.level.intersect(predictedMove, PixelType.COLLISION))
 		{
@@ -47,7 +47,7 @@ export default class Mario extends GeneralAi implements IRenderable
 		this.atlas.setSprite("jump");
 		this.isJumping = true;
 		this.velocity.y += this.gravity * this.game.deltaTime;
-		this.position.y += Math.round(this.velocity.y);
+		this.position.y += this.velocity.y * this.game.deltaTime;
 	}
 
 	public sprint()
@@ -86,7 +86,7 @@ export default class Mario extends GeneralAi implements IRenderable
 		}
 		this.atlas.setSprite("death");
 		this.velocity.y += this.gravity * this.game.deltaTime;
-		this.position.y += Math.round(this.velocity.y);
+		this.position.y += this.velocity.y * this.game.deltaTime;
 		
 		if (this.position.y > this.game.level.size.y && !this.deathDone)
 		{
