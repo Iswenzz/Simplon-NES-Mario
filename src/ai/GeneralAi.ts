@@ -75,7 +75,7 @@ export default class GeneralAi extends AbstractAi implements IRenderable
 		{
 			this.velocity = Vector.copy(this.originalVelocity);
 			this.isJumping = false;
-			this.atlas.setSprite("idle");
+			this.idle();
 			return;
 		}
 

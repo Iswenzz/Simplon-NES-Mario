@@ -18,6 +18,7 @@ export default class Mario extends GeneralAi implements IRenderable
 
 		this.size = new Vector(18, 18);
 		this.atlas = new AtlasImage(this.game.imageFactory.getImage("mario"), marioAtlas);
+		this.atlas.setSprite("idle");
 		this.sprintAnimation = new Animation(this.atlas, "sprint", 3);
 
 		this.life = 3;
@@ -40,7 +41,7 @@ export default class Mario extends GeneralAi implements IRenderable
 		{
 			this.velocity = Vector.copy(this.originalVelocity);
 			this.isJumping = false;
-			this.atlas.setSprite("idle");
+			this.idle();
 			return;
 		}
 

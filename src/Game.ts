@@ -1,4 +1,5 @@
 import * as Stats from "stats.js";
+import AbstractAi from "ai/AbstractAi";
 import Mario from "ai/characters/Mario";
 import Level from "world/Level";
 import Canvas from "sys/Canvas";
@@ -23,6 +24,7 @@ export default class Game
 
 	public level: Level;
 	public mario: Mario;
+	public entities: AbstractAi[];
 
 	public frames = 0;
 	public fps = 0;
@@ -77,6 +79,7 @@ export default class Game
 		this.canvas.initialize();
 		this.controls = new Controls();
 
+		this.entities = [];
 		this.level = new L1_1();
 		this.mario = new Mario(this.level.spawnPoint);
 
@@ -109,7 +112,7 @@ export default class Game
 
 		// Game
 		this.level.frame();
-		this.mario.frame();
+		this.entities.forEach(e => e.frame());
 
 		// Triggers
 		Action.callback(this.mario.health <= 0, this.level.respawn.bind(this.level));

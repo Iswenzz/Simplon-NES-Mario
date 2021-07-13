@@ -25,6 +25,7 @@ export default abstract class AbstractAi implements IRenderable
 	protected constructor(spawnPoint?: Vector)
 	{
 		this.game = Game.getInstance();
+		this.game.entities.push(this);
 
 		this.maxHealth = 100;
 		this.health = this.maxHealth;
