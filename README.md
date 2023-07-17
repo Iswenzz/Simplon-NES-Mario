@@ -1,4 +1,3 @@
-![](https://i.imgur.com/XFvRaaO.png)
 # Simplon-NES-Mario
 ![](https://github.com/Iswenzz/Simplon-NES-Mario/assets/26555415/e6cc7b8b-c370-4604-9ebe-68b6c6aa633d)
 
